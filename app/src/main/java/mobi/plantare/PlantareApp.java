@@ -3,6 +3,7 @@ package mobi.plantare;
 import android.app.Application;
 
 import com.facebook.FacebookSdk;
+import com.firebase.client.Firebase;
 import com.parse.Parse;
 //import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
@@ -37,8 +38,7 @@ public class PlantareApp extends Application {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-//        ParseFacebookUtils.initialize("");
-
+        Firebase.setAndroidContext(this);
     }
 
 }

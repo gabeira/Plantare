@@ -1,7 +1,10 @@
 package mobi.plantare.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -41,6 +45,7 @@ public class GardenMapFragment extends Fragment implements LocationListener,
 
     private GoogleMap map;
     private LatLng myLocationToPlant;
+    private Firebase myFirebaseRef;
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -95,6 +100,7 @@ public class GardenMapFragment extends Fragment implements LocationListener,
         } else {
             initializeMap();
         }
+         myFirebaseRef = new Firebase("https://plantare.firebaseio.com/");
 
         return rootView;
     }
@@ -102,9 +108,22 @@ public class GardenMapFragment extends Fragment implements LocationListener,
     public void initializeMap() {
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setCompassEnabled(true);
-        map.setMyLocationEnabled(true);
 
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            }
+        } else {
+            map.setMyLocationEnabled(true);
+            map.getUiSettings().setMyLocationButtonEnabled(true);
+        }
+
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Planted");
 //            query.whereEqualTo("playerName", "Dan Stemkoski");
@@ -171,6 +190,7 @@ public class GardenMapFragment extends Fragment implements LocationListener,
             testObject.put("place", new ParseGeoPoint(myLocationToPlant.latitude, myLocationToPlant.longitude));
             testObject.saveInBackground();
             Toast.makeText(getActivity(), "Obrigado por plantar " + whatIPlanted + " a cidade agradece.", Toast.LENGTH_LONG).show();
+            myFirebaseRef.child("planted").setValue(whatIPlanted);
 
         } else {
             myLocationToPlant = new LatLng(-3.1101645, -58.9629745);
