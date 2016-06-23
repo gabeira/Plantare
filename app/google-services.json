@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "40512800445",
+    "firebase_url": "https://plantare.firebaseio.com",
+    "project_id": "project-9203799912474484960",
+    "storage_bucket": "project-9203799912474484960.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40512800445:android:ae18be0a33d5b268",
+        "android_client_info": {
+          "package_name": "mobi.plantare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40512800445-2glishf20vad677i10u6m0cf7dmf5tkc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobi.plantare",
+            "certificate_hash": "BAB1EC7B96AC45F507C9466DA63D9A00A03DFF0A"
+          }
+        },
+        {
+          "client_id": "40512800445-uis7qda0dfdvjqjdlgabdnomtc8es69g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3D9MrEzm34fh3CBVpIlV4M8asIfyY5zg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,29 +1,21 @@
 package mobi.plantare;
 
-import android.support.design.widget.NavigationView;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//import mobi.plantare.adapters.SectionsPagerAdapter;
 import mobi.plantare.fragments.GardenMapFragment;
 import mobi.plantare.fragments.SocialFragment;
 import mobi.plantare.fragments.UserFragment;
 
-
 public class MainActivity extends AppCompatActivity
-//        implements ActionBar.TabListener
 {
 
     /**

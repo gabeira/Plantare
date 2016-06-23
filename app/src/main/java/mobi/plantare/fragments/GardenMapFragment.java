@@ -13,39 +13,37 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
+//import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
+//import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.List;
+import java.util.Calendar;
+import java.util.Random;
 
 import mobi.plantare.R;
+import mobi.plantare.model.Plant;
 
 /**
  * A placeholder fragment containing a simple view.
  * Created by gabriel on 7/1/15.
  */
-public class GardenMapFragment extends Fragment implements LocationListener,
+public class GardenMapFragment extends Fragment implements //LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap map;
     private LatLng myLocationToPlant;
-    private Firebase myFirebaseRef;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -80,6 +78,9 @@ public class GardenMapFragment extends Fragment implements LocationListener,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
+
 //        FloatingActionButton fabi = (FloatingActionButton) rootView.findViewById(R.id.fabutton);
         Button plant = (Button) rootView.findViewById(R.id.plante);
         plant.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +101,6 @@ public class GardenMapFragment extends Fragment implements LocationListener,
         } else {
             initializeMap();
         }
-         myFirebaseRef = new Firebase("https://plantare.firebaseio.com/");
-
         return rootView;
     }
 
@@ -124,38 +123,11 @@ public class GardenMapFragment extends Fragment implements LocationListener,
             map.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Planted");
-//            query.whereEqualTo("playerName", "Dan Stemkoski");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> plantedList, ParseException e) {
-                if (e == null) {
-                    Log.d("score", "Retrieved " + plantedList.size() + " scores");
-                    for (ParseObject p : plantedList) {
-                        Log.d("score", "pp: " + p.getString("name"));
-                        try {
-                            LatLng ll = new LatLng(p.getParseGeoPoint("place").getLatitude(), p.getParseGeoPoint("place").getLongitude());
-
-                            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory
-                                    .fromResource(R.drawable.ic_local_florist_white_48dp);
-                            BitmapDescriptor bitmapDescriptor2 = BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET);
-
-                            map.addMarker(new MarkerOptions()
-                                    .title("" + p.getString("name"))
-                                    .icon(bitmapDescriptor2)
-//                                    .snippet("The most populous city in Australia.")
-                                    .position(ll));
-                        } catch (Exception ex) {
-                            Log.e("score", "Error: " + ex.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                } else {
-                    Log.d("score", "Error: " + e.getMessage());
-                }
-            }
-        });
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "123");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Map Started");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
     }
 
@@ -169,10 +141,10 @@ public class GardenMapFragment extends Fragment implements LocationListener,
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
+//    @Override
+//    public void onLocationChanged(Location location) {
+//
+//    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -181,20 +153,30 @@ public class GardenMapFragment extends Fragment implements LocationListener,
 
     public void plant() {
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         if (myLocationToPlant != null) {
+            int id = (new Random()).nextInt(90);
 
             String whatIPlanted = "Bouganvilleas";
             Log.d("Main", "Voce Plantou " + whatIPlanted);
-            ParseObject testObject = new ParseObject("Planted");
-            testObject.put("name", whatIPlanted);
-            testObject.put("place", new ParseGeoPoint(myLocationToPlant.latitude, myLocationToPlant.longitude));
-            testObject.saveInBackground();
             Toast.makeText(getActivity(), "Obrigado por plantar " + whatIPlanted + " a cidade agradece.", Toast.LENGTH_LONG).show();
-            myFirebaseRef.child("planted").setValue(whatIPlanted);
+
+            Plant plant = new Plant();
+            plant.setName(whatIPlanted + id);
+            plant.setType("Flor");
+            plant.setWhen(Calendar.getInstance().getTimeInMillis());
+            plant.setLatitude(myLocationToPlant.latitude);
+            plant.setLongitude(myLocationToPlant.longitude);
+
+            DatabaseReference myRef = database.getReference("plants_data");
+
+
+            myRef.child("plants").child(plant.getName()).setValue(plant);
 
         } else {
-            myLocationToPlant = new LatLng(-3.1101645, -58.9629745);
-            Toast.makeText(getActivity(), "Não foi possivel obter a sua localização para plantar...", Toast.LENGTH_LONG).show();
+            String error = "Não foi possivel obter a sua localização para plantar...";
+            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+            FirebaseCrash.log(error);
         }
     }
 
@@ -205,7 +187,7 @@ public class GardenMapFragment extends Fragment implements LocationListener,
             MapFragment f = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
             if (f != null)
                 getActivity().getFragmentManager().beginTransaction().remove(f).commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -6,26 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import mobi.plantare.R;
@@ -55,7 +41,7 @@ public class UserFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ManagerListAdapter adapter;
-    private CallbackManager callbackManager;
+//    private CallbackManager callbackManager;
     private TextView txtUser;
 
     /**
@@ -97,68 +83,68 @@ public class UserFragment extends Fragment {
 
         txtUser = (TextView) v.findViewById(R.id.user);
 
-        FacebookSdk.sdkInitialize(getActivity());
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager loginManager = LoginManager.getInstance();
+//        FacebookSdk.sdkInitialize(getActivity());
+//        callbackManager = CallbackManager.Factory.create();
+//        LoginManager loginManager = LoginManager.getInstance();
+////
+//			loginManager.logInWithReadPermissions(this,
+//                    Arrays.asList("public_profile",
+////                            "user_friends",
+////                            "app_friends",
+//////                            "user_place_visits",
+//////                            "friend_location",
+////                            "friends_location"
+//////                            "friend_photos",
+//                            "friend_status"
+//                    ));
 //
-			loginManager.logInWithReadPermissions(this,
-                    Arrays.asList("public_profile",
-//                            "user_friends",
-//                            "app_friends",
-////                            "user_place_visits",
-////                            "friend_location",
-//                            "friends_location"
-////                            "friend_photos",
-                            "friend_status"
-                    ));
-
-        LoginButton loginButton = (LoginButton) v.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("public_profile");
-        // If using in a fragment
-        loginButton.setFragment(this);
-        // Other app specific specialization
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-                Log.i(TAG, "success: " + loginResult.toString());
-
-                GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(
-                                    JSONObject object,
-                                    GraphResponse response) {
-                                try {
-                                    txtUser.setText("User: " + object.getString("name"));
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,link");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-                Log.e(TAG, "Facebook canceled");
-
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Log.e(TAG, "Error: " + exception.getMessage());
-
-            }
-        });
+//        LoginButton loginButton = (LoginButton) v.findViewById(R.id.login_button);
+//        loginButton.setReadPermissions("public_profile");
+//        // If using in a fragment
+//        loginButton.setFragment(this);
+//        // Other app specific specialization
+//
+//        // Callback registration
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                // App code
+//                Log.i(TAG, "success: " + loginResult.toString());
+//
+//                GraphRequest request = GraphRequest.newMeRequest(
+//                        loginResult.getAccessToken(),
+//                        new GraphRequest.GraphJSONObjectCallback() {
+//                            @Override
+//                            public void onCompleted(
+//                                    JSONObject object,
+//                                    GraphResponse response) {
+//                                try {
+//                                    txtUser.setText("User: " + object.getString("name"));
+//                                }catch (Exception e){
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                Bundle parameters = new Bundle();
+//                parameters.putString("fields", "id,name,link");
+//                request.setParameters(parameters);
+//                request.executeAsync();
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                // App code
+//                Log.e(TAG, "Facebook canceled");
+//
+//            }
+//
+//            @Override
+//            public void onError(FacebookException exception) {
+//                // App code
+//                Log.e(TAG, "Error: " + exception.getMessage());
+//
+//            }
+//        });
 
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
@@ -204,7 +190,7 @@ public class UserFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
