@@ -15,6 +15,11 @@ import mobi.plantare.fragments.GardenMapFragment;
 import mobi.plantare.fragments.SocialFragment;
 import mobi.plantare.fragments.UserFragment;
 
+
+    //        Before you start to develop please read this link fist
+    //        #BR Antes de de começar a desenvolver por favor leia o link antes
+    //        https://docs.google.com/document/d/19hzhEWVQzkm5KwemZbJop8QAN67B70jjdfOY_SITJ1I/edit?usp=sharing
+
 public class MainActivity extends AppCompatActivity
 {
 
