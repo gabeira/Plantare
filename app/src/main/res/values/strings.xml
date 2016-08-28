@@ -10,4 +10,22 @@
     <string name="google_geo_api_key" translatable="false">AIzaSyCq-U0Kzgn2rns09fa3iLpmI6XqWdU7GYY</string>
     <string name="facebook_app_id" translatable="false">880574782012124</string>
 
+    <string name="daniel">preencher seu nome completo aqui</string>
+
+    <string name="marcelo">preencher seu nome completo aqui</string>
+
+    <string name="jeferson">preencher seu nome completo aqui</string>
+
+    <string name="geiciane">preencher seu nome completo aqui</string>
+
+    <string name="itapirema">preencher seu nome completo aqui</string>
+
+    <string name="john">preencher seu nome completo aqui</string>
+
+    <string name="fabiano">preencher seu nome completo aqui</string>
+
+    <string name="wanderson_jackson">preencher seu nome completo aqui</string>
+
+    <string name="gabriel">Gabriel Bernardo Pereira</string>
+
 </resources>
