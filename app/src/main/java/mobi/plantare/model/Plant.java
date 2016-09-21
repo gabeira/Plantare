@@ -12,11 +12,11 @@ public class Plant implements Serializable {
 
     private double latitude;
     private double longitude;
-    private Gardener gardener;
+//    private Gardener gardener;
     private String name;
     private String type;
     private long when;
-    private List pictures;
+//    private List pictures;
 
     public Plant() {
     }
@@ -24,11 +24,11 @@ public class Plant implements Serializable {
     public Plant(double latitude, double longitude, Gardener gardener, String name, String type, long when, List pictures) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.gardener = gardener;
+//        this.gardener = gardener;
         this.name = name;
         this.type = type;
         this.when = when;
-        this.pictures = pictures;
+//        this.pictures = pictures;
     }
 
     public double getLatitude() {
@@ -51,13 +51,13 @@ public class Plant implements Serializable {
         return new LatLng(latitude, longitude);
     }
 
-    public Gardener getGardener() {
-        return gardener;
-    }
-
-    public void setGardener(Gardener gardener) {
-        this.gardener = gardener;
-    }
+//    public Gardener getGardener() {
+//        return gardener;
+//    }
+//
+//    public void setGardener(Gardener gardener) {
+//        this.gardener = gardener;
+//    }
 
     public String getName() {
         return name;
@@ -83,11 +83,11 @@ public class Plant implements Serializable {
         this.when = when;
     }
 
-    public List getPictures() {
-        return pictures;
-    }
-
-    public void setPictures(List pictures) {
-        this.pictures = pictures;
-    }
+//    public List getPictures() {
+//        return pictures;
+//    }
+//
+//    public void setPictures(List pictures) {
+//        this.pictures = pictures;
+//    }
 }

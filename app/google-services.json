@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "40512800445",
-    "firebase_url": "https://plantare.firebaseio.com",
-    "project_id": "project-9203799912474484960",
-    "storage_bucket": "project-9203799912474484960.appspot.com"
+    "project_number": "149970706275",
+    "firebase_url": "https://plantare-mobi.firebaseio.com",
+    "project_id": "plantare-mobi",
+    "storage_bucket": "plantare-mobi.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:40512800445:android:ae18be0a33d5b268",
+        "mobilesdk_app_id": "1:149970706275:android:ae18be0a33d5b268",
         "android_client_info": {
           "package_name": "mobi.plantare"
         }
       },
       "oauth_client": [
         {
-          "client_id": "40512800445-2glishf20vad677i10u6m0cf7dmf5tkc.apps.googleusercontent.com",
+          "client_id": "149970706275-pn3kpfsibprpso7rbo1cp6npcs156sje.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "mobi.plantare",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "40512800445-uis7qda0dfdvjqjdlgabdnomtc8es69g.apps.googleusercontent.com",
+          "client_id": "149970706275-i4h8aqhd9o3sj2m2jo0hiss74tue1h8q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB3D9MrEzm34fh3CBVpIlV4M8asIfyY5zg"
+          "current_key": "AIzaSyDffoTFVM95CDIaK8oV8wq9B9ghlc379rQ"
         }
       ],
       "services": {
@@ -37,8 +37,20 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149970706275-1hdmup31eca6ti823qhs04dc0kuja0p5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "mobi.Plantare"
+              }
+            },
+            {
+              "client_id": "149970706275-i4h8aqhd9o3sj2m2jo0hiss74tue1h8q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

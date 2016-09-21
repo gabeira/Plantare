@@ -27,7 +27,7 @@ dependencies {
     compile 'com.android.support:design:24.2.0'
 
     //needs multidex
-//    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services:9.4.0'
 
 //    compile "com.google.maps.android:android-maps-utils:0.4.2"
 
