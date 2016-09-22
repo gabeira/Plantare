@@ -23,9 +23,12 @@
     <string name="john">John Kennedy F </string>
 
     <string name="fabiano">preencher seu nome completo aqui</string>
-
-    <string name="wanderson_jackson">preencher seu nome completo aqui</string>
+    <!--MY NAME WANDERSON JACKSON-->
+    <string name="wanderson_jackson">Wanderson Alfred Jackson </string>
 
     <string name="gabriel">Gabriel Bernardo Pereira</string>
+
+
+
 
 </resources>
