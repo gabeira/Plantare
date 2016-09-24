@@ -3,32 +3,31 @@ package mobi.plantare.model;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by gabeira@gmail.com on 6/23/16.
  */
 public class Plant implements Serializable {
 
+    private String id;
     private double latitude;
     private double longitude;
-//    private Gardener gardener;
+    private String gardenerId;
+    private String gardenerName;
     private String name;
     private String type;
     private long when;
-//    private List pictures;
+    private String photo;
 
     public Plant() {
     }
 
-    public Plant(double latitude, double longitude, Gardener gardener, String name, String type, long when, List pictures) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-//        this.gardener = gardener;
-        this.name = name;
-        this.type = type;
-        this.when = when;
-//        this.pictures = pictures;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getLatitude() {
@@ -51,13 +50,22 @@ public class Plant implements Serializable {
         return new LatLng(latitude, longitude);
     }
 
-//    public Gardener getGardener() {
-//        return gardener;
-//    }
-//
-//    public void setGardener(Gardener gardener) {
-//        this.gardener = gardener;
-//    }
+    public String getGardenerId() {
+        return gardenerId;
+    }
+
+    public void setGardenerId(String gardenerId) {
+        this.gardenerId = gardenerId;
+    }
+
+
+    public String getGardenerName() {
+        return gardenerName;
+    }
+
+    public void setGardenerName(String gardenerName) {
+        this.gardenerName = gardenerName;
+    }
 
     public String getName() {
         return name;
@@ -83,11 +91,11 @@ public class Plant implements Serializable {
         this.when = when;
     }
 
-//    public List getPictures() {
-//        return pictures;
-//    }
-//
-//    public void setPictures(List pictures) {
-//        this.pictures = pictures;
-//    }
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 }
