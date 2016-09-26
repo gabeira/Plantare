@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Plantare</string>
 
+    <string name="fb_login_protocol_scheme" translatable="false">880574782012124</string>
+
     <string name="title_section1">Jardim</string>
     <string name="title_section2">Social</string>
     <string name="title_section3">Perfil</string>

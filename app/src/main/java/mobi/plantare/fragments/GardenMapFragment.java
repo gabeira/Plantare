@@ -1,26 +1,20 @@
 package mobi.plantare.fragments;
 
 import android.Manifest;
-import android.content.DialogInterface;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,10 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
+import mobi.plantare.PlantActivity;
 import mobi.plantare.R;
 import mobi.plantare.model.Plant;
 
@@ -69,7 +64,11 @@ public class GardenMapFragment extends Fragment
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final String PLANTS_DATASET = "plants";
+    private final static int REQUEST_PLANT = 10;
+    public final static String LOCATION_TO_PLANT = "location_to_plant";
+    public final static String PLANTED_PLANT = "planted_plant";
+
+    public static final String PLANTS_DATASET = "plants";
     private static final String TAG = "Plants";
 
     private static final long INTERVAL = 1000 * 60;
@@ -168,69 +167,14 @@ public class GardenMapFragment extends Fragment
     public void plant() {
 
         if (myLocationToPlant != null) {
-
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-//TODO Criar dialogo com text imput https://developer.android.com/guide/topics/ui/dialogs.html
-            // set prompts.xml to alertdialog builder
-//            alertDialogBuilder.setView(promptsView);
-
-//            final EditText userInput = (EditText) promptsView
-//                    .findViewById(R.id.editTextDialogUserInput);
-            alertDialogBuilder.setMessage("Descreva sua planta");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setCancelable(false)
-                    .setPositiveButton(android.R.string.ok,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // get user input and set it to result
-                                    // edit text
-//                                    result.setText(userInput.getText());
-                                    savePlantData();
-                                }
-                            })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
-
-
+            Intent intent = new Intent(getContext(), PlantActivity.class);
+            intent.putExtra(LOCATION_TO_PLANT, myLocationToPlant);
+            startActivityForResult(intent, REQUEST_PLANT);
         } else {
             String error = "Não foi possivel obter a sua localização para plantar...";
             Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
             FirebaseCrash.log(error);
         }
-    }
-
-    public void savePlantData() {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        int id = (new Random()).nextInt(90);
-
-        String whatIPlanted = "Bouganvilleas";
-        Log.d("Main", "Voce Plantou " + whatIPlanted);
-
-        Plant plant = new Plant();
-        plant.setName(whatIPlanted + id);
-        plant.setType("Flor");
-        plant.setWhen(Calendar.getInstance().getTimeInMillis());
-        plant.setLatitude(myLocationToPlant.latitude);
-        plant.setLongitude(myLocationToPlant.longitude);
-
-        myRef.child(PLANTS_DATASET).child(plant.getName()).setValue(plant);
-
-        Toast.makeText(getActivity(), "Obrigado por plantar " + whatIPlanted + " a cidade agradece.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -263,17 +207,21 @@ public class GardenMapFragment extends Fragment
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
 
                     Plant plant = dataSnap.getValue(Plant.class);
+
+                    DateFormat df = new SimpleDateFormat();
+                    df.setTimeZone(TimeZone.getDefault());
+                    String plantedDate = df.getDateTimeInstance().format(plant.getWhen());
+                    String gardener = "";
+                    if (plant.getGardenerName() != null)
+                        gardener = plant.getGardenerName();
+
                     Log.e(TAG, "X>>> Value is: " + plant.getName());
                     Marker m = map.addMarker(new MarkerOptions()
                             .position(new LatLng(plant.getLatitude(), plant.getLongitude()))
                             .title("" + plant.getName())
-                            .snippet(
-                                    "Plantou aqui "
-                                            + plant.getWhen())
-//                                            + SimpleDateFormat.getDateTimeInstance().format(parseUser.getLastUpdate()))
+                            .snippet(gardener + " Plantou esta " + plant.getType() + " aqui em " + plantedDate)
                             .icon(BitmapDescriptorFactory
                                     .fromResource(R.drawable.iplanted2)));
-
 
                 }
             }
@@ -281,7 +229,7 @@ public class GardenMapFragment extends Fragment
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                Log.e(TAG, "Failed to read value.", error.toException());
+                Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
     }
@@ -427,6 +375,14 @@ public class GardenMapFragment extends Fragment
                     getPlants();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PLANT && resultCode == Activity.RESULT_OK) {
+            Plant planted = (Plant) data.getSerializableExtra(PLANTED_PLANT);
+            Toast.makeText(getContext(), "Obrigado por plantar " + planted.getName() + " a cidade agradece.", Toast.LENGTH_LONG).show();
         }
     }
 }
