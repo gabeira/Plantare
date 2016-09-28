@@ -23,4 +23,4 @@ Plante você também esta Idéia.
 
 Thank you, [contributors]!
 
-[contributors]:(https://github.com/gabeira/Plantare/graphs/contributors)
+[contributors]: https://github.com/gabeira/Plantare/graphs/contributors
