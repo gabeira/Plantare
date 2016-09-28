@@ -19,4 +19,8 @@ Plante você também esta Idéia.
 * https://github.com/firebase/quickstart-android
 
 
-##[Contribuidores](https://github.com/gabeira/Plantare/graphs/contributors)
+##[Contribuidores]
+
+Thank you, [contributors]!
+
+[contributors]:(https://github.com/gabeira/Plantare/graphs/contributors)
