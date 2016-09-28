@@ -26,7 +26,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
@@ -35,6 +35,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -59,6 +62,9 @@ public class GardenMapFragment extends Fragment
 
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
+
+    private ClusterManager<Plant> mClusterManager;
+
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -119,6 +125,11 @@ public class GardenMapFragment extends Fragment
                         @Override
                         public void onMapReady(GoogleMap googleMap) {
                             map = googleMap;
+
+                            //Set the Map Style from https://mapstyle.withgoogle.com
+                            MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style);
+                            map.setMapStyle(mapStyleOptions);
+
                             initializeMap();
                         }
                     });
@@ -205,25 +216,11 @@ public class GardenMapFragment extends Fragment
                 }
                 Log.e(TAG, "Size: " + dataSnapshot.getChildrenCount());
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
-
                     Plant plant = dataSnap.getValue(Plant.class);
-
-                    DateFormat df = new SimpleDateFormat();
-                    df.setTimeZone(TimeZone.getDefault());
-                    String plantedDate = df.getDateTimeInstance().format(plant.getWhen());
-                    String gardener = "";
-                    if (plant.getGardenerName() != null)
-                        gardener = plant.getGardenerName();
-
-                    Log.e(TAG, "X>>> Value is: " + plant.getName());
-                    Marker m = map.addMarker(new MarkerOptions()
-                            .position(new LatLng(plant.getLatitude(), plant.getLongitude()))
-                            .title("" + plant.getName())
-                            .snippet(gardener + " Plantou esta " + plant.getType() + " aqui em " + plantedDate)
-                            .icon(BitmapDescriptorFactory
-                                    .fromResource(R.drawable.iplanted2)));
-
+                    mClusterManager.addItem(plant);
+                    Log.e(TAG, "Added Plant : " + plant.getName());
                 }
+                mClusterManager.cluster();
             }
 
             @Override
@@ -343,6 +340,12 @@ public class GardenMapFragment extends Fragment
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
+
+                mClusterManager = new ClusterManager<Plant>(getActivity(), map);
+                mClusterManager.setRenderer(new PlantRenderer());
+                map.setOnCameraChangeListener(mClusterManager);
+                map.setOnMarkerClickListener(mClusterManager);
+                map.setOnInfoWindowClickListener(mClusterManager);
                 getPlants();
             }
         }
@@ -372,6 +375,12 @@ public class GardenMapFragment extends Fragment
                     map.setMyLocationEnabled(true);
                     map.getUiSettings().setMyLocationButtonEnabled(true);
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
+
+                    mClusterManager = new ClusterManager<Plant>(getActivity(), map);
+                    mClusterManager.setRenderer(new PlantRenderer());
+                    map.setOnCameraChangeListener(mClusterManager);
+                    map.setOnMarkerClickListener(mClusterManager);
+                    map.setOnInfoWindowClickListener(mClusterManager);
                     getPlants();
                 }
             }
@@ -383,6 +392,32 @@ public class GardenMapFragment extends Fragment
         if (requestCode == REQUEST_PLANT && resultCode == Activity.RESULT_OK) {
             Plant planted = (Plant) data.getSerializableExtra(PLANTED_PLANT);
             Toast.makeText(getContext(), "Obrigado por plantar " + planted.getName() + " a cidade agradece.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private class PlantRenderer extends DefaultClusterRenderer<Plant> {
+        public PlantRenderer() {
+            super(getContext(), map, mClusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(Plant plant, MarkerOptions markerOptions) {
+            DateFormat df = SimpleDateFormat.getDateInstance();
+            df.setTimeZone(TimeZone.getDefault());
+            String plantedDate = df.format(plant.getWhen());
+            String gardener = "";
+            if (plant.getGardenerName() != null)
+                gardener = plant.getGardenerName();
+
+            markerOptions.title("" + plant.getName())
+                    .snippet(gardener + " plantou " + plant.getType() + " em " + plantedDate)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iplanted2));
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            return cluster.getSize() > 1;
         }
     }
 }

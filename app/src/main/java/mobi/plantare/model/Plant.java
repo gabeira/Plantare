@@ -1,13 +1,14 @@
 package mobi.plantare.model;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
 
 /**
  * Created by gabeira@gmail.com on 6/23/16.
  */
-public class Plant implements Serializable {
+public class Plant implements Serializable, ClusterItem {
 
     private String id;
     private double latitude;
@@ -20,6 +21,16 @@ public class Plant implements Serializable {
     private String photo;
 
     public Plant() {
+    }
+
+    public Plant(double lat, double lng) {
+        latitude = lat;
+        longitude = lng;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(latitude, longitude);
     }
 
     public String getId() {
@@ -46,9 +57,9 @@ public class Plant implements Serializable {
         this.longitude = longitude;
     }
 
-    public LatLng getWhere() {
-        return new LatLng(latitude, longitude);
-    }
+//    public LatLng getWhere() {
+//        return new LatLng(latitude, longitude);
+//    }
 
     public String getGardenerId() {
         return gardenerId;
