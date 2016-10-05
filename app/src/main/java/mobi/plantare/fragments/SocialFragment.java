@@ -5,11 +5,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
+
 import mobi.plantare.R;
+import mobi.plantare.model.Plant;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +42,13 @@ public class SocialFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    public static final String PLANTS_DATASET = "plants";
+    private static final String TAG = "Plants";
+    private ClusterManager<Plant> mClusterManager;
+
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -114,4 +130,34 @@ public class SocialFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    private void getPlants() {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(PLANTS_DATASET);
+
+    // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
+                    Log.e(TAG, "Failed to read value.");
+                }
+                Log.e(TAG, "Size: " + dataSnapshot.getChildrenCount());
+                for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                    Plant plant = dataSnap.getValue(Plant.class);
+                    mClusterManager.addItem(plant);
+                    Log.e(TAG, "Added Plant : " + plant.getName());
+                }
+                mClusterManager.cluster();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
 }
