@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +18,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mobi.plantare.R;
+import mobi.plantare.adapters.SocialListAdapter;
 import mobi.plantare.model.Plant;
+
 
 
 /**
@@ -31,7 +37,16 @@ import mobi.plantare.model.Plant;
  */
 public class SocialFragment extends Fragment {
 
+    private static ClusterManager mClusterManager;
+    //private ClusterManager<Plant> mClusterManager;
+
     private RecyclerView recyclerView;
+    private SocialListAdapter adapter;
+
+
+    public static final String PLANTS_DATASET = "plants";
+    private static final String TAG = "Plants";
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,10 +58,6 @@ public class SocialFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    public static final String PLANTS_DATASET = "plants";
-    private static final String TAG = "Plants";
-    private ClusterManager<Plant> mClusterManager;
 
 
 
@@ -89,7 +100,60 @@ public class SocialFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_social, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.social_recycler_view);
+
+        adapter = new SocialListAdapter(getActivity(),getData());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return  layout;
+    }
+
+    public static List<Plant> getData() {
+
+        List<Plant> data = new ArrayList<>();
+        int[] icons = {R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher};
+        String[] titles = {"Vivz","Anky","Slidenerd","Youtube"};
+
+        for (int i =0; i<titles.length && i<icons.length; i++) {
+            Plant current = new Plant();
+
+            current.setPhoto(Integer.toString(icons[i]));
+            current.setName(titles[i]);
+
+            data.add(current);
+        }
+
+        /*
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(PLANTS_DATASET);
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
+                    Log.e(TAG, "Failed to read value.");
+                }
+                Log.e(TAG, "Size: " + dataSnapshot.getChildrenCount());
+                for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                    Plant plant = dataSnap.getValue(Plant.class);
+                    mClusterManager.addItem(plant);
+                    Log.e(TAG, "Added Plant : " + plant.getName());
+                }
+                mClusterManager.cluster();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        */
+
+        return data;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -131,34 +195,4 @@ public class SocialFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    private void getPlants() {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(PLANTS_DATASET);
-
-    // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
-                    Log.e(TAG, "Failed to read value.");
-                }
-                Log.e(TAG, "Size: " + dataSnapshot.getChildrenCount());
-                for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
-                    Plant plant = dataSnap.getValue(Plant.class);
-                    mClusterManager.addItem(plant);
-                    Log.e(TAG, "Added Plant : " + plant.getName());
-                }
-                mClusterManager.cluster();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
 }
