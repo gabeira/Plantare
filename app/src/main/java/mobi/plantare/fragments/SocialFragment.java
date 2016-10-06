@@ -20,6 +20,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import mobi.plantare.R;
 import mobi.plantare.model.Plant;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
