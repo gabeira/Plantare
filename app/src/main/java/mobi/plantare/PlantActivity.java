@@ -2,11 +2,14 @@ package mobi.plantare;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,12 +25,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,8 +104,8 @@ public class PlantActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Tipo da Planta Obrigatorio", Toast.LENGTH_LONG).show();
                 plantType.setError("Tipo da Planta Obrigatorio");
             } else {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference();
+                //FirebaseDatabase database = FirebaseDatabase.getInstance();
+                //DatabaseReference myRef = database.getReference();
 
                 if (null != FirebaseAuth.getInstance().getCurrentUser()) {
                     plant.setGardenerName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
@@ -116,9 +122,9 @@ public class PlantActivity extends AppCompatActivity {
                 plant.setLatitude(local.latitude);
                 plant.setLongitude(local.longitude);
 
-                myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.getId()).setValue(plant);
+                //myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.getId()).setValue(plant);
 
-                sharePlantOnFacebook();
+                //sharePlantOnFacebook();
 
                 Log.d(TAG, "Voce Plantou " + plant.getName());
 
@@ -140,15 +146,18 @@ public class PlantActivity extends AppCompatActivity {
             try {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
+                /*ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
                 if (imageBitmap != null) {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, bYtE);
                 }
                 byte[] byteArray = bYtE.toByteArray();
-                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);*/
                 plantImage.setImageBitmap(imageBitmap);
                 plantImage.setVisibility(View.VISIBLE);
-                plant.setPhoto(imageBase64String);
+                //plant.setPhoto(imageBase64String);
+
+                Uri tempUri = getImageUri(getApplicationContext(), imageBitmap);
+                plant.setPhoto(getRealPathFromURI(tempUri, this));
 //                if (imageBitmap != null)
 //                    imageBitmap.recycle();
 
@@ -164,15 +173,18 @@ public class PlantActivity extends AppCompatActivity {
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 2;
                 Bitmap imageBitmap = BitmapFactory.decodeStream(stream, new Rect(-1, -1, -1, -1), options);
-                ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
+                /*ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
                 if (imageBitmap != null) {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, bYtE);
                 }
                 byte[] byteArray = bYtE.toByteArray();
-                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);*/
                 plantImage.setImageBitmap(imageBitmap);
                 plantImage.setVisibility(View.VISIBLE);
-                plant.setPhoto(imageBase64String);
+                //plant.setPhoto(imageBase64String);
+
+                Uri selectedImage = data.getData();
+                plant.setPhoto(getRealPathFromURI(selectedImage , this));
 //                if (imageBitmap != null)
 //                    imageBitmap.recycle();
             } catch (FileNotFoundException e) {
@@ -238,15 +250,21 @@ public class PlantActivity extends AppCompatActivity {
         }
     }
 
-    public void sharePlantOnFacebook(){
-        //TODO Compartilhar no Facebook sua planta
-
-        Log.d(TAG, "TODO Compartilhar " + plant.getName()+" no Facebook.");
-
-        //Convert from string to Bitmap
-        byte[] byteArray = Base64.decode(plant.getPhoto(), Base64.DEFAULT);
-        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-
-        //Or use original Bitmap
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
     }
 }

@@ -1,12 +1,23 @@
 package mobi.plantare;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +25,7 @@ import java.util.List;
 import mobi.plantare.fragments.GardenMapFragment;
 import mobi.plantare.fragments.SocialFragment;
 import mobi.plantare.fragments.UserFragment;
+import mobi.plantare.model.Plant;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -37,6 +49,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+
 
         // Set up the action bar.
 //        final ActionBar actionBar = getSupportActionBar();
@@ -144,4 +159,21 @@ public class MainActivity extends AppCompatActivity
 //    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 //    }
 
+    public void sharePlantOnFacebook(@NonNull final Plant plant){
+        //TODO Compartilhar no Facebook sua planta
+        //Convert from string to Bitmap
+        /*byte[] byteArray = Base64.decode(plant.getPhoto(), Base64.DEFAULT);
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);*/
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = BitmapFactory.decodeFile(plant.getPhoto(), options);
+
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(bmp)
+                .build();
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhoto(photo)
+                .build();
+    }
 }

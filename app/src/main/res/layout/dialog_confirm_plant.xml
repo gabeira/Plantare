@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="@dimen/ln_padding_left_right"
+    android:paddingRight="@dimen/ln_padding_left_right"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    tools:context="mobi.plantare.fragments.GardenMapFragment">
+
+    <ImageView
+        android:layout_width="@dimen/image_width_height"
+        android:layout_height="@dimen/image_width_height"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/iplanted2"/>
+
+    <TextView
+        android:id="@+id/tx_thanks_message_part_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/tx_thanks_to_plant_message_part_one"
+        android:textSize="@dimen/tx_thanks_message_size"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/tx_plant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/tx_thanks_message_size"
+        android:textColor="@color/primary_dark"
+        android:textStyle="bold|italic"/>
+
+    <TextView
+        android:id="@+id/tx_thanks_message_part_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/tx_thanks_to_plant_message_part_two"
+        android:textSize="@dimen/tx_thanks_message_size"
+        android:textStyle="italic"/>
+
+    <Button
+        android:id="@+id/bt_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_share_facebook"
+        android:layout_marginTop="@dimen/bt_share_margin_top"
+        android:textAllCaps="false"
+        android:text="@string/bt_facebook_share_title"
+        android:textColor="@android:color/white"/>
+
+    <Button
+        android:id="@+id/bt_not_now"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bt_not_now_margin_top"
+        android:layout_marginBottom="@dimen/bt_not_now_margin_bottom"
+        android:background="@drawable/selector_confirm_button"
+        android:textAllCaps="false"
+        android:text="@string/bt_not_now_title"
+        android:textColor="@android:color/white"/>
+
+
+</LinearLayout>

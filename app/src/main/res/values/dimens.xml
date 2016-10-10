@@ -7,4 +7,14 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="button_press_elevation">4dp</dimen>
+
+    <!--Confirm plant dialog -->
+    <dimen name="ln_padding_left_right">10dp</dimen>
+    <dimen name="image_width_height">100dp</dimen>
+    <dimen name="bt_share_margin_top">30dp</dimen>
+    <dimen name="bt_not_now_margin_top">10dp</dimen>
+    <dimen name="bt_not_now_margin_bottom">10dp</dimen>
+    <dimen name="tx_thanks_message_size">16dp</dimen>
+    <dimen name="tx_thanks_name_size">18dp</dimen>
+
 </resources>

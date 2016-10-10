@@ -2,18 +2,23 @@ package mobi.plantare.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +48,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import mobi.plantare.MainActivity;
 import mobi.plantare.PlantActivity;
 import mobi.plantare.R;
 import mobi.plantare.model.Plant;
@@ -70,7 +76,7 @@ public class GardenMapFragment extends Fragment
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private final static int REQUEST_PLANT = 10;
+    public final static int REQUEST_PLANT = 10;
     public final static String LOCATION_TO_PLANT = "location_to_plant";
     public final static String PLANTED_PLANT = "planted_plant";
 
@@ -391,7 +397,8 @@ public class GardenMapFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_PLANT && resultCode == Activity.RESULT_OK) {
             Plant planted = (Plant) data.getSerializableExtra(PLANTED_PLANT);
-            Toast.makeText(getContext(), "Obrigado por plantar " + planted.getName() + " a cidade agradece.", Toast.LENGTH_LONG).show();
+            showConfirmPlantDialog(getActivity(), planted);
+            //Toast.makeText(getContext(), "Obrigado por plantar " + planted.getName() + " a cidade agradece.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -419,5 +426,34 @@ public class GardenMapFragment extends Fragment
         protected boolean shouldRenderAsCluster(Cluster cluster) {
             return cluster.getSize() > 1;
         }
+    }
+
+    private void showConfirmPlantDialog(@NonNull final Context context, @NonNull final Plant plant){
+
+        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_confirm_plant, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.tx_thanks_to_plant_title));
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setView(view);
+
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+        TextView message = (TextView) view.findViewById(R.id.tx_plant_name);
+        message.setText(plant.getName());
+
+        view.findViewById(R.id.bt_share).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                ((MainActivity) context).sharePlantOnFacebook(plant);
+            }
+        });
+
+        view.findViewById(R.id.bt_not_now).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                alert.dismiss();
+            }
+        });
     }
 }
