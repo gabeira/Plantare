@@ -13,7 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.data.DataFetcher;
+import com.bumptech.glide.load.model.stream.StreamModelLoader;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -103,15 +110,51 @@ public class SocialListAdapter extends RecyclerView.Adapter <SocialListAdapter.V
             //Convert from string to Bitmap
             //byte[] byteArray = Base64.decode(img, Base64.DEFAULT);
             //Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child(img);
 
             Glide
                     .with(context)
-                    .load(img)
-                    .centerCrop()
-                    .placeholder(R.mipmap.ic_launcher)
+                    .using(new FirebaseImageLoader())
+                    .load(ref)
                     .into(imgPlantView);
-
             return this;
+        }
+    }
+
+    public class FirebaseImageLoader implements StreamModelLoader<StorageReference> {
+
+        @Override
+        public DataFetcher<InputStream> getResourceFetcher(StorageReference model, int width, int height) {
+            return new FirebaseStorageFetcher(model);
+        }
+
+        private class FirebaseStorageFetcher implements DataFetcher<InputStream> {
+
+            private StorageReference mRef;
+
+            FirebaseStorageFetcher(StorageReference ref) {
+                mRef = ref;
+            }
+
+            @Override
+            public InputStream loadData(Priority priority) throws Exception {
+                return Tasks.await(mRef.getStream()).getStream();
+            }
+
+            @Override
+            public void cleanup() {
+                // No cleanup possible, Task does not expose cancellation
+            }
+
+            @Override
+            public String getId() {
+                return mRef.getPath();
+            }
+
+            @Override
+            public void cancel() {
+                // No cancellation possible, Task does not expose cancellation
+            }
         }
     }
 }
