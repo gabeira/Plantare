@@ -37,16 +37,10 @@ import mobi.plantare.model.Plant;
  */
 public class SocialFragment extends Fragment {
 
-    private static ClusterManager mClusterManager;
-    //private ClusterManager<Plant> mClusterManager;
+    private ClusterManager<Plant> mclusterManager;
 
-    private RecyclerView recyclerView;
-    private SocialListAdapter adapter;
-
-
-    public static final String PLANTS_DATASET = "plants";
+    private static final String PLANTS_DATASET = "plants";
     private static final String TAG = "Plants";
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,9 +52,6 @@ public class SocialFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-
-
 
     /**
      * Use this factory method to create a new instance of
@@ -99,62 +90,91 @@ public class SocialFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_social, container, false);
-        recyclerView = (RecyclerView) layout.findViewById(R.id.social_recycler_view);
 
-        adapter = new SocialListAdapter(getActivity(),getData());
+        ArrayList<Plant> lista = getPlants();
+        //ArrayList<Plant> lista = new ArrayList<>();
+
+        for (Plant plant : lista){
+            Log.d("Debug",plant.getName());
+        }
+
+
+        //Criando o adapter
+        SocialListAdapter adapter = new SocialListAdapter(getActivity(),lista);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.social_recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        return  layout;
+        return layout;
     }
 
-    public static List<Plant> getData() {
-
-        List<Plant> data = new ArrayList<>();
-        int[] icons = {R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher};
-        String[] titles = {"Vivz","Anky","Slidenerd","Youtube"};
-
-        for (int i =0; i<titles.length && i<icons.length; i++) {
-            Plant current = new Plant();
-
-            current.setPhoto(Integer.toString(icons[i]));
-            current.setName(titles[i]);
-
-            data.add(current);
-        }
-
-        /*
+    public ArrayList<Plant> getPlants(){
+        //Connect to database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(PLANTS_DATASET);
 
-        // Read from the database
+        final ArrayList<Plant> lista = new ArrayList<>();
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
-                    Log.e(TAG, "Failed to read value.");
+                if (!dataSnapshot.exists() || dataSnapshot.getValue() == null){
+                    Log.e(TAG,"Failed to read value");
                 }
-                Log.e(TAG, "Size: " + dataSnapshot.getChildrenCount());
-                for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                Log.e(TAG,"Size: " + dataSnapshot.getChildrenCount());
+                for (DataSnapshot dataSnap : dataSnapshot.getChildren()){
                     Plant plant = dataSnap.getValue(Plant.class);
-                    mClusterManager.addItem(plant);
-                    Log.e(TAG, "Added Plant : " + plant.getName());
+                    //mclusterManager.addItem(plant);
+                    lista.add(plant);
+                    Log.e(TAG,"Added Plant: " + plant.getName());
+                    Log.e(TAG,"Added Plant: " + plant.getType());
+                    Log.e(TAG,"Added Plant: " + plant.getPhoto());
                 }
-                mClusterManager.cluster();
+                //mclusterManager.cluster();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+                //Failed to read value
+                Log.w(TAG,"Failed to read value.",error.toException());
             }
         });
-        */
 
-        return data;
+        return lista;
+
+        /*
+        Plant plant1 = new Plant();
+        plant1.setName("Planta 01");
+        plant1.setType("Descrição planta 01");
+
+        Plant plant2 = new Plant();
+        plant2.setName("Planta 02");
+        plant2.setType("Descrição planta 02");
+
+        Plant plant3 = new Plant();
+        plant3.setName("Planta 03");
+        plant3.setType("Descrição planta 03");
+
+        Plant plant4 = new Plant();
+        plant4.setName("Planta 04");
+        plant4.setType("Descrição planta 04");
+
+        Plant plant5 = new Plant();
+        plant5.setName("Planta 05");
+        plant5.setType("Descrição planta 05");
+
+        lista.add(plant1);
+        lista.add(plant2);
+        lista.add(plant3);
+        lista.add(plant4);
+        lista.add(plant5);
+
+        return lista;
+        */
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
