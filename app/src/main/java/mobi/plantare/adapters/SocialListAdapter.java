@@ -107,6 +107,7 @@ public class SocialListAdapter extends RecyclerView.Adapter <SocialListAdapter.V
             Glide
                     .with(context)
                     .load(img)
+                    .centerCrop()
                     .placeholder(R.mipmap.ic_launcher)
                     .into(imgPlantView);
 

@@ -128,9 +128,9 @@ public class SocialFragment extends Fragment {
                     Plant plant = dataSnap.getValue(Plant.class);
                     //mclusterManager.addItem(plant);
                     lista.add(plant);
-                    Log.e(TAG,"Added Plant: " + plant.getName());
-                    Log.e(TAG,"Added Plant: " + plant.getType());
-                    Log.e(TAG,"Added Plant: " + plant.getPhoto());
+                    Log.e(TAG,"Added Plant (name): " + plant.getName());
+                    Log.e(TAG,"Added Plant (type): " + plant.getType());
+                    Log.e(TAG,"Added Plant (photo): " + plant.getPhoto());
                 }
                 //mclusterManager.cluster();
             }
