@@ -106,55 +106,11 @@ public class SocialListAdapter extends RecyclerView.Adapter <SocialListAdapter.V
 
         public ViewHolder setImg(String img){
             if (imgPlantView == null) return this;
-
             //Convert from string to Bitmap
-            //byte[] byteArray = Base64.decode(img, Base64.DEFAULT);
-            //Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child(img);
-
-            Glide
-                    .with(context)
-                    .using(new FirebaseImageLoader())
-                    .load(ref)
-                    .into(imgPlantView);
+            byte[] byteArray = Base64.decode(img, Base64.DEFAULT);
+            Bitmap imageAsBytes = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            imgPlantView.setImageBitmap(imageAsBytes);
             return this;
-        }
-    }
-
-    public class FirebaseImageLoader implements StreamModelLoader<StorageReference> {
-
-        @Override
-        public DataFetcher<InputStream> getResourceFetcher(StorageReference model, int width, int height) {
-            return new FirebaseStorageFetcher(model);
-        }
-
-        private class FirebaseStorageFetcher implements DataFetcher<InputStream> {
-
-            private StorageReference mRef;
-
-            FirebaseStorageFetcher(StorageReference ref) {
-                mRef = ref;
-            }
-
-            @Override
-            public InputStream loadData(Priority priority) throws Exception {
-                return Tasks.await(mRef.getStream()).getStream();
-            }
-
-            @Override
-            public void cleanup() {
-                // No cleanup possible, Task does not expose cancellation
-            }
-
-            @Override
-            public String getId() {
-                return mRef.getPath();
-            }
-
-            @Override
-            public void cancel() {
-                // No cancellation possible, Task does not expose cancellation
-            }
         }
     }
 }
