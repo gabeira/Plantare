@@ -5,31 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.data.DataFetcher;
-import com.bumptech.glide.load.model.stream.StreamModelLoader;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import mobi.plantare.R;
-import mobi.plantare.fragments.SocialFragment;
 import mobi.plantare.model.Plant;
-
-import static android.R.attr.data;
 
 
 /**
@@ -41,7 +26,6 @@ public class SocialListAdapter extends RecyclerView.Adapter <SocialListAdapter.V
     private final Context context;
     private ArrayList<Plant> lista;
     private Plant plant;
-
     //#1 Step
     public SocialListAdapter(Context context, ArrayList<Plant> lista) {
         this.lista = lista;
@@ -104,12 +88,14 @@ public class SocialListAdapter extends RecyclerView.Adapter <SocialListAdapter.V
             return this;
         }
 
-        public ViewHolder setImg(String img){
+        public ViewHolder setImg(String img) {
             if (imgPlantView == null) return this;
             //Convert from string to Bitmap
-            byte[] byteArray = Base64.decode(img, Base64.DEFAULT);
-            Bitmap imageAsBytes = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            imgPlantView.setImageBitmap(imageAsBytes);
+
+            byte[] imageAsBytes = Base64.decode(img, Base64.DEFAULT);
+            Bitmap bmpImage = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+            imgPlantView.setImageBitmap(bmpImage);
+
             return this;
         }
     }
