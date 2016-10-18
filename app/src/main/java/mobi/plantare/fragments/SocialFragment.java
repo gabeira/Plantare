@@ -37,11 +37,8 @@ import mobi.plantare.model.Plant;
  */
 public class SocialFragment extends Fragment {
 
-    private ClusterManager<Plant> mclusterManager;
-
     private static final String PLANTS_DATASET = "plants";
     private static final String TAG = "Plants";
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,6 +49,11 @@ public class SocialFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private SocialListAdapter mAdapter;
+
+    public SocialFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -71,10 +73,6 @@ public class SocialFragment extends Fragment {
         return fragment;
     }
 
-    public SocialFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,18 +89,12 @@ public class SocialFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_social, container, false);
 
-        ArrayList<Plant> lista = getPlants();
-        //ArrayList<Plant> lista = new ArrayList<>();
-
-        for (Plant plant : lista){
-            Log.d("Debug",plant.getName());
-        }
-
-
         //Criando o adapter
-        SocialListAdapter adapter = new SocialListAdapter(getActivity(),lista);
         RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.social_recycler_view);
-        recyclerView.setAdapter(adapter);
+
+        //Criando instância do adapter
+        mAdapter = new SocialListAdapter(getActivity(),getPlants());
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return layout;
@@ -126,13 +118,12 @@ public class SocialFragment extends Fragment {
                 Log.e(TAG,"Size: " + dataSnapshot.getChildrenCount());
                 for (DataSnapshot dataSnap : dataSnapshot.getChildren()){
                     Plant plant = dataSnap.getValue(Plant.class);
-                    //mclusterManager.addItem(plant);
                     lista.add(plant);
                     Log.e(TAG,"Plant (name): " + plant.getName());
                     Log.e(TAG,"Plant (type): " + plant.getType());
                     Log.e(TAG,"Plant (photo): " + plant.getPhoto());
                 }
-                //mclusterManager.cluster();
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -143,36 +134,6 @@ public class SocialFragment extends Fragment {
         });
 
         return lista;
-
-        /*
-        Plant plant1 = new Plant();
-        plant1.setName("Planta 01");
-        plant1.setType("Descrição planta 01");
-
-        Plant plant2 = new Plant();
-        plant2.setName("Planta 02");
-        plant2.setType("Descrição planta 02");
-
-        Plant plant3 = new Plant();
-        plant3.setName("Planta 03");
-        plant3.setType("Descrição planta 03");
-
-        Plant plant4 = new Plant();
-        plant4.setName("Planta 04");
-        plant4.setType("Descrição planta 04");
-
-        Plant plant5 = new Plant();
-        plant5.setName("Planta 05");
-        plant5.setType("Descrição planta 05");
-
-        lista.add(plant1);
-        lista.add(plant2);
-        lista.add(plant3);
-        lista.add(plant4);
-        lista.add(plant5);
-
-        return lista;
-        */
     }
 
 

@@ -100,22 +100,14 @@ public class SocialListAdapter extends RecyclerView.Adapter <SocialListAdapter.V
         public ViewHolder setImg(String imageBytes){
             if (imgPlantView == null) return this;
 
-            //Convert from string to Bitmap
-            //byte[] imageByteArray = Base64.decode(imageBytes, Base64.DEFAULT);
-            //Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-
-            /* Ainda não está funcionando o set de imagens das plantas
-            Glide
-                    .with(context)
-                    .load(imageBytes)
-                    .asBitmap()
-                    .toBytes()
-                    .centerCrop()
-                    .placeholder(R.mipmap.ic_launcher)
-                    .into(imgPlantView);
-
-            */
-
+            if (imageBytes == null) {
+                imgPlantView.setImageResource(R.mipmap.ic_launcher);
+            } else {
+                //Convert from string to Bitmap
+                byte[] imageBytesArray = Base64.decode(imageBytes, Base64.DEFAULT);
+                Bitmap bmp = BitmapFactory.decodeByteArray(imageBytesArray, 0, imageBytesArray.length);
+                imgPlantView.setImageBitmap(bmp);
+            }
             return this;
         }
     }

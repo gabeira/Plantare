@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:padding="6dp">
 
     <ImageView
         android:id="@+id/imgPlant"
-        android:paddingLeft="16dp"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@mipmap/ic_launcher"/>
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -24,14 +23,14 @@
             android:paddingRight="60dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Plant name"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/descriptionPlant"
             android:paddingLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Plant description"/>
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
