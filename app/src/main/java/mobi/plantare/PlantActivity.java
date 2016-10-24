@@ -68,7 +68,7 @@ public class PlantActivity extends AppCompatActivity {
         if (null != local) {
             Log.d(TAG, "local: " + local.latitude);
         } else {
-            Log.e(TAG, "local NULLLL");
+            Log.e(TAG, "local Null");
         }
 
         plantName = ((EditText) findViewById(R.id.plant_name));
@@ -104,8 +104,8 @@ public class PlantActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Tipo da Planta Obrigatorio", Toast.LENGTH_LONG).show();
                 plantType.setError("Tipo da Planta Obrigatorio");
             } else {
-                //FirebaseDatabase database = FirebaseDatabase.getInstance();
-                //DatabaseReference myRef = database.getReference();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference();
 
                 if (null != FirebaseAuth.getInstance().getCurrentUser()) {
                     plant.setGardenerName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
@@ -122,14 +122,16 @@ public class PlantActivity extends AppCompatActivity {
                 plant.setLatitude(local.latitude);
                 plant.setLongitude(local.longitude);
 
-                //myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.getId()).setValue(plant);
+                myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.getId()).setValue(plant);
 
-                //sharePlantOnFacebook();
-
+                //The plant and the photo is available for use by the application and
+                //avoids the problem with the bundle
+                PlantareApp.getInstance().setLastPlant(plant);
                 Log.d(TAG, "Voce Plantou " + plant.getName());
 
                 Intent result = new Intent(this, GardenMapFragment.class);
-                result.putExtra(GardenMapFragment.PLANTED_PLANT, plant);
+                //If the photo is tool large, throws a exception
+                //result.putExtra(GardenMapFragment.PLANTED_PLANT, plant);
                 setResult(Activity.RESULT_OK, result);
                 finish();
             }
@@ -146,18 +148,15 @@ public class PlantActivity extends AppCompatActivity {
             try {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                /*ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
+                ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
                 if (imageBitmap != null) {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, bYtE);
                 }
                 byte[] byteArray = bYtE.toByteArray();
-                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);*/
+                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
                 plantImage.setImageBitmap(imageBitmap);
                 plantImage.setVisibility(View.VISIBLE);
-                //plant.setPhoto(imageBase64String);
-
-                Uri tempUri = getImageUri(getApplicationContext(), imageBitmap);
-                plant.setPhoto(getRealPathFromURI(tempUri, this));
+                plant.setPhoto(imageBase64String);
 //                if (imageBitmap != null)
 //                    imageBitmap.recycle();
 
@@ -173,18 +172,16 @@ public class PlantActivity extends AppCompatActivity {
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = 2;
                 Bitmap imageBitmap = BitmapFactory.decodeStream(stream, new Rect(-1, -1, -1, -1), options);
-                /*ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
+                ByteArrayOutputStream bYtE = new ByteArrayOutputStream();
                 if (imageBitmap != null) {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, bYtE);
                 }
                 byte[] byteArray = bYtE.toByteArray();
-                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);*/
+                String imageBase64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
                 plantImage.setImageBitmap(imageBitmap);
                 plantImage.setVisibility(View.VISIBLE);
-                //plant.setPhoto(imageBase64String);
+                plant.setPhoto(imageBase64String);
 
-                Uri selectedImage = data.getData();
-                plant.setPhoto(getRealPathFromURI(selectedImage , this));
 //                if (imageBitmap != null)
 //                    imageBitmap.recycle();
             } catch (FileNotFoundException e) {
@@ -225,7 +222,6 @@ public class PlantActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -248,23 +244,5 @@ public class PlantActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
     }
 }

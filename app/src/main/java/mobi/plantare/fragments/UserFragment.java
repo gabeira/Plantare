@@ -104,7 +104,9 @@ public class UserFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        FacebookSdk.sdkInitialize(getActivity());
+
+        //Now this method is called in MainActivity
+        //FacebookSdk.sdkInitialize(getActivity());
 
         mCallbackManager = CallbackManager.Factory.create();
 
@@ -147,35 +149,38 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_user, container, false);
 
-        txtUser = (TextView) v.findViewById(R.id.user);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        txtUser = (TextView) view.findViewById(R.id.user);
         if (user != null) {
             // User is signed in
             Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid() + "  -  " + user.getDisplayName());
             txtUser.setText(user.getDisplayName());
         }
 
-        // Initialize Facebook Login button
-        LoginManager loginManager = LoginManager.getInstance();
-////
-        loginManager.logInWithReadPermissions(this,
-                Arrays.asList("public_profile"
-//                            "user_friends",
-//                            "app_friends",
-////                            "user_place_visits",
-////                            "friend_location",
-//                            "friends_location"
-////                            "friend_photos",
-//                            "friend_status"
-                ));
+        //For custom login button
+        /*LoginManager loginManager = LoginManager.getInstance();
+        loginManager.logInWithReadPermissions(this, Arrays.asList("public_profile"));*/
+        //Another permissions possible to read
+        /*Arrays.asList("public_profile", "user_friends", "app_friends", "user_place_visits",
+        /*List<String> permissionNeeds = Arrays.asList("publish_actions");
+        loginManager.logInWithPublishPermissions(this, permissionNeeds);*/
 
-        LoginButton loginButton = (LoginButton) v.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
-//        // If using in a fragment
+        //Initialize Facebook Login button
+        LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
+
+        //If use this method can't use setReadPermissions method
+        loginButton.setPublishPermissions(Arrays.asList("publish_actions"));
+
+        //If use this method can't use setPublishPermissions method
+        //loginButton.setReadPermissions("email", "public_profile");
+
+        //If using in a fragment
         loginButton.setFragment(this);
-//        // Callback registration
+
+        // Callback registration
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -215,7 +220,8 @@ public class UserFragment extends Fragment {
             }
         });
 
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        //We can use this list to show another share option
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         List<String> itens = new ArrayList<>();
         itens.add("Teste 1");
         itens.add("Teste 2");
@@ -226,7 +232,7 @@ public class UserFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        return v;
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

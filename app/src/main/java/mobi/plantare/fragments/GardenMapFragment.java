@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ import java.util.TimeZone;
 
 import mobi.plantare.MainActivity;
 import mobi.plantare.PlantActivity;
+import mobi.plantare.PlantareApp;
 import mobi.plantare.R;
 import mobi.plantare.model.Plant;
 
@@ -70,21 +72,19 @@ public class GardenMapFragment extends Fragment
     private GoogleApiClient mGoogleApiClient;
 
     private ClusterManager<Plant> mClusterManager;
+    private AlertDialog mShareDialog;
 
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    public final static int REQUEST_PLANT = 10;
-    public final static String LOCATION_TO_PLANT = "location_to_plant";
-    public final static String PLANTED_PLANT = "planted_plant";
-
-    public static final String PLANTS_DATASET = "plants";
     private static final String TAG = "Plants";
-
     private static final long INTERVAL = 1000 * 60;
     private static final long FASTEST_INTERVAL = 1000 * 10;
+    public static final String PLANTS_DATASET = "plants";
+    public static final int REQUEST_PLANT = 10;
+    public static final String LOCATION_TO_PLANT = "location_to_plant";
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -361,8 +361,7 @@ public class GardenMapFragment extends Fragment
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -395,13 +394,13 @@ public class GardenMapFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_PLANT && resultCode == Activity.RESULT_OK) {
-            Plant planted = (Plant) data.getSerializableExtra(PLANTED_PLANT);
-            showConfirmPlantDialog(getActivity(), planted);
+        if (resultCode == Activity.RESULT_OK) {
+            //plant = (Plant) data.getSerializableExtra(PLANTED_PLANT);
+            Plant plant = PlantareApp.getInstance().getLastPlant();
+            showConfirmPlantDialog(getActivity(), plant);
             //Toast.makeText(getContext(), "Obrigado por plantar " + planted.getName() + " a cidade agradece.", Toast.LENGTH_LONG).show();
         }
     }
-
 
     private class PlantRenderer extends DefaultClusterRenderer<Plant> {
         public PlantRenderer() {
@@ -428,6 +427,7 @@ public class GardenMapFragment extends Fragment
         }
     }
 
+
     private void showConfirmPlantDialog(@NonNull final Context context, @NonNull final Plant plant){
 
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
@@ -438,22 +438,32 @@ public class GardenMapFragment extends Fragment
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setView(view);
 
-        final AlertDialog alert = builder.create();
-        alert.show();
+        mShareDialog = builder.create();
+        mShareDialog.show();
 
         TextView message = (TextView) view.findViewById(R.id.tx_plant_name);
         message.setText(plant.getName());
 
         view.findViewById(R.id.bt_share).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                ((MainActivity) context).sharePlantOnFacebook(plant);
+                ((MainActivity) getActivity()).shareOnFacebook();
             }
         });
 
         view.findViewById(R.id.bt_not_now).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                alert.dismiss();
+                mShareDialog.dismiss();
             }
         });
+    }
+
+    public void dismissDialog(){
+        if(mShareDialog == null){
+            Log.e("Plantare","Share mShareDialog is null");
+        }else if(mShareDialog.isShowing()){
+            mShareDialog.dismiss();
+        }else{
+            Log.e("Plantare","Share mShareDialog is not showing");
+        }
     }
 }
