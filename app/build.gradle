@@ -51,6 +51,7 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:9.4.0'
 
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
