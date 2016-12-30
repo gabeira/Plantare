@@ -2,11 +2,14 @@ package mobi.plantare;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,12 +25,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +68,7 @@ public class PlantActivity extends AppCompatActivity {
         if (null != local) {
             Log.d(TAG, "local: " + local.latitude);
         } else {
-            Log.e(TAG, "local NULLLL");
+            Log.e(TAG, "local Null");
         }
 
         plantName = ((EditText) findViewById(R.id.plant_name));
@@ -118,12 +124,14 @@ public class PlantActivity extends AppCompatActivity {
 
                 myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.getId()).setValue(plant);
 
-                sharePlantOnFacebook();
-
+                //The plant and the photo is available for use by the application and
+                //avoids the problem with the bundle
+                PlantareApp.getInstance().setLastPlant(plant);
                 Log.d(TAG, "Voce Plantou " + plant.getName());
 
                 Intent result = new Intent(this, GardenMapFragment.class);
-                result.putExtra(GardenMapFragment.PLANTED_PLANT, plant);
+                //If the photo is tool large, throws a exception
+                //result.putExtra(GardenMapFragment.PLANTED_PLANT, plant);
                 setResult(Activity.RESULT_OK, result);
                 finish();
             }
@@ -173,6 +181,7 @@ public class PlantActivity extends AppCompatActivity {
                 plantImage.setImageBitmap(imageBitmap);
                 plantImage.setVisibility(View.VISIBLE);
                 plant.setPhoto(imageBase64String);
+
 //                if (imageBitmap != null)
 //                    imageBitmap.recycle();
             } catch (FileNotFoundException e) {
@@ -213,7 +222,6 @@ public class PlantActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -236,17 +244,5 @@ public class PlantActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    public void sharePlantOnFacebook(){
-        //TODO Compartilhar no Facebook sua planta
-
-        Log.d(TAG, "TODO Compartilhar " + plant.getName()+" no Facebook.");
-
-        //Convert from string to Bitmap
-        byte[] byteArray = Base64.decode(plant.getPhoto(), Base64.DEFAULT);
-        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-
-        //Or use original Bitmap
     }
 }

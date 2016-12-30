@@ -32,6 +32,14 @@
 
     <string name="gabriel">Gabriel Bernardo Pereira</string>
 
+    <!--Comfirm plant dialog -->
+    <string name="tx_thanks_to_plant_title">Obrigado!</string>
+    <string name="tx_thanks_to_plant_message_part_one">O mundo é um lugar melhor agora com</string>
+    <string name="tx_thanks_to_plant_message_part_two">Você faz a diferença!</string>
+    <string name="bt_facebook_share_title">Compartilhe no Facebook</string>
+    <string name="bt_not_now_title">Agora não, obrigado!</string>
+
+
 
 
 
