@@ -12,7 +12,7 @@
     <string name="google_geo_api_key" translatable="false">AIzaSyCq-U0Kzgn2rns09fa3iLpmI6XqWdU7GYY</string>
     <string name="facebook_app_id" translatable="false">880574782012124</string>
 
-    <string name="daniel">preencher seu nome completo aqui</string>
+    <string name="daniel">Daniel Nogueira</string>
 
     <string name="marcelo">Marcelo Barbosa</string>
 
@@ -39,8 +39,9 @@
     <string name="bt_facebook_share_title">Compartilhe no Facebook</string>
     <string name="bt_not_now_title">Agora não, obrigado!</string>
 
-
-
-
+    <!--Share action-->
+    <string name="shared_success">Sua boa ação foi compartilhada com sucesso!</string>
+    <string name="no_facebook_account_conected">Conecte-se ao Facebook para compartilhar</string>
+    <string name="share_error">Falha ao compartilhar</string>
 
 </resources>

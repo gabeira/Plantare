@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -126,11 +125,11 @@ public class MainActivity extends AppCompatActivity implements FacebookCallback<
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public Adapter(FragmentManager fm) {
+        Adapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
         }
@@ -220,12 +219,12 @@ public class MainActivity extends AppCompatActivity implements FacebookCallback<
 
     @Override
     public void onSuccess(Sharer.Result result) {
-        Toast.makeText(this, "Sua boa ação foi compartilhada com sucesso!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.shared_success, Toast.LENGTH_LONG).show();
 
         Fragment frag = getActiveFragment(mViewPager, 0);
 
         if(frag == null){
-            Log.e("Plantate", "frag is null");
+            Log.e("Plantare", "frag is null");
         }else if(frag instanceof GardenMapFragment){
             ((GardenMapFragment) frag).dismissDialog();
         }
@@ -233,16 +232,16 @@ public class MainActivity extends AppCompatActivity implements FacebookCallback<
 
     @Override
     public void onCancel() {
-        Log.e("Plantate", "The sharing on Facebook was cancelled");
+        Log.e("Plantare", "The sharing on Facebook was cancelled");
     }
 
     @Override
     public void onError(FacebookException error) {
 
         if(error.getMessage().contains("facebookErrorCode: 190") || error.getMessage().contains("facebookErrorCode: 2500")){
-            Toast.makeText(this, "Conecte-se ao Facebook para compartilhar", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_facebook_account_conected, Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(this, "Falha ao compartilhar", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.share_error, Toast.LENGTH_LONG).show();
         }
 
         Log.e("Plantare", "FacebookException on share action: "+error.getMessage());
