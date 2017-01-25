@@ -3,16 +3,13 @@ package mobi.plantare.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -64,16 +62,10 @@ public class GardenMapFragment extends Fragment
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleMap map;
-    private LatLng myLocationToPlant;
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;
-
-    private ClusterManager<Plant> mClusterManager;
-    private AlertDialog mShareDialog;
-
+    public static final String PLANTS_DATASET = "plants";
+    public static final int REQUEST_PLANT = 10;
+    public static final String LOCATION_TO_PLANT = "location_to_plant";
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -82,9 +74,13 @@ public class GardenMapFragment extends Fragment
     private static final String TAG = "Plants";
     private static final long INTERVAL = 1000 * 60;
     private static final long FASTEST_INTERVAL = 1000 * 10;
-    public static final String PLANTS_DATASET = "plants";
-    public static final int REQUEST_PLANT = 10;
-    public static final String LOCATION_TO_PLANT = "location_to_plant";
+    private GoogleMap mMap;
+    private LatLng myLocationToPlant;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
+    private ClusterManager<Plant> mClusterManager;
+    private AlertDialog mShareDialog;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -125,38 +121,42 @@ public class GardenMapFragment extends Fragment
                 plant();
             }
         });
-        if (map == null) {
-            ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map))
-                    .getMapAsync(new OnMapReadyCallback() {
-                        @Override
-                        public void onMapReady(GoogleMap googleMap) {
-                            map = googleMap;
-
-                            //Set the Map Style from https://mapstyle.withgoogle.com
-                            MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style);
-                            map.setMapStyle(mapStyleOptions);
-
-                            initializeMap();
-                        }
-                    });
-        } else {
-            initializeMap();
-        }
-
+        handleMap();
         createLocationRequest();
+        handleGoogleAPI();
+        return rootView;
+    }
+
+    private void handleGoogleAPI() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
+    }
 
-        return rootView;
+    private void createMap() {
+        ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map))
+                .getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        mMap = googleMap;
+                        setMapStyle();
+                        initializeMap();
+                    }
+                });
+    }
+
+    private void setMapStyle() {
+        //Set the Map Style from https://mapstyle.withgoogle.com
+        MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style);
+        mMap.setMapStyle(mapStyleOptions);
     }
 
     public void initializeMap() {
-        map.getUiSettings().setZoomControlsEnabled(true);
-        map.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "123");
@@ -168,17 +168,18 @@ public class GardenMapFragment extends Fragment
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
-        startLocationUpdates();
+        //TODO: 2 check if here is the best place to call this method
+        checkPermissions();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.w(TAG, " onConnectionSuspended." + i);
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.w(TAG, " onConnectionFailed." + connectionResult.toString());
     }
 
     public void plant() {
@@ -211,7 +212,7 @@ public class GardenMapFragment extends Fragment
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(PLANTS_DATASET);
 
-// Read from the database
+        // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -244,17 +245,16 @@ public class GardenMapFragment extends Fragment
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
-    protected void startLocationUpdates() {
-        if (mGoogleApiClient.isConnected()) {
-//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            checkPermissions();
+    protected void checkToStartLocationUpdates() {
+        if (mGoogleApiClient.isConnected() && isPermissionToLocationAlreadyGranted()) {
+            startLocationUpdates();
             Log.d(TAG, "Location update started ..............: ");
         }
     }
 
     protected void stopLocationUpdates() {
         if (mGoogleApiClient.isConnected()) {
-//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, GardenMapFragment.this);
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, GardenMapFragment.this);
             Log.d(TAG, "Location update stopped ..............: ");
         }
     }
@@ -288,7 +288,7 @@ public class GardenMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        startLocationUpdates();
+        checkToStartLocationUpdates();
         Log.d(TAG, "Location update resumed .....................");
     }
 
@@ -297,31 +297,61 @@ public class GardenMapFragment extends Fragment
         myLocationToPlant = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
-
     public void checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (!isPermissionToLocationAlreadyGranted()) {
+            requestToUserLocationPermission();
+        } else {
+            locationPermissionsGranted();
+        }
+    }
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+    private void locationPermissionsGranted() {
+        checkToStartLocationUpdates();
+        //TODO: 3 check if here is the best place to call this method
+        prepareMapToPlant();
+    }
+
+    private void prepareMapToPlant() {
+        if (null != mMap) {
+            setUpMapWithLocation();
+            setUpMapClusterManager();
+            getPlants();
+        }
+    }
+
+    private void handleMap() {
+        if (mMap == null) {
+            createMap();
+        } else {
+            initializeMap();
+        }
+    }
+
+    private void requestToUserLocationPermission() {
+        if (isNecessaryToExplainToUserWhyTheLocationPermissionIsNecessary()) {
+            showExplanationToUserAsynchronously();
+        } else {
+            requestPermissionsWithoutExplanation();
+        }
+    }
+
+    private boolean isNecessaryToExplainToUserWhyTheLocationPermissionIsNecessary() {
+        return ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
+
+    private void requestPermissionsWithoutExplanation() {
+        this.requestPermissions(
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION);
+    }
+
+
+    //TODO: 1 Implement this method
+    private void showExplanationToUserAsynchronously() {
+        // Show an explanation to the user *asynchronously* -- don't block
+        // this thread waiting for the user's response! After the user
+        // sees the explanation, try again to request the permission.
 //                Snackbar.make(getContext().findViewById(android.R.id.content), "Sem localizacao", Snackbar.LENGTH_INDEFINITE)
 //                        .setAction(android.R.string.ok, new View.OnClickListener() {
 //                            @Override
@@ -331,65 +361,84 @@ public class GardenMapFragment extends Fragment
 //                                        MY_PERMISSIONS_REQUEST_LOCATION);
 //                            }
 //                        }).show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-        } else {
-            Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            myLocationToPlant = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-//                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-//                mLastUpdateTime = java.text.DateFormat.getTimeInstance().format(new Date());
-            if (null != map) {
-                map.setMyLocationEnabled(true);
-                map.getUiSettings().setMyLocationButtonEnabled(true);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
-
-                mClusterManager = new ClusterManager<Plant>(getActivity(), map);
-                mClusterManager.setRenderer(new PlantRenderer());
-                map.setOnCameraIdleListener(mClusterManager);
-                map.setOnMarkerClickListener(mClusterManager);
-                map.setOnInfoWindowClickListener(mClusterManager);
-                getPlants();
-            }
-        }
-
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
+    private boolean isPermissionToLocationAlreadyGranted() {
+        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission
+                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission
+                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length < 1 ||
-                        (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-
-                    Toast.makeText(getContext(), "Sem localizacao", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                myLocationToPlant = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-//                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-                if (null != map) {
-                    map.setMyLocationEnabled(true);
-                    map.getUiSettings().setMyLocationButtonEnabled(true);
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
-
-                    mClusterManager = new ClusterManager<Plant>(getActivity(), map);
-                    mClusterManager.setRenderer(new PlantRenderer());
-                    map.setOnCameraIdleListener(mClusterManager);
-                    map.setOnMarkerClickListener(mClusterManager);
-                    map.setOnInfoWindowClickListener(mClusterManager);
-                    getPlants();
-                }
+    private LatLng geLastKnowLatLng() {
+        LatLng latLng = null;
+        if (isPermissionToLocationAlreadyGranted()) {
+            Location currentLocation = getLastKnowLocation();
+            if (currentLocation != null) {
+                latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             }
         }
+        return latLng;
+    }
+
+    private Location getLastKnowLocation() {
+        Location currentLocation = null;
+        try {
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        } catch (SecurityException e) {
+            Log.e(TAG, " Permission to Location is not Granted");
+        }
+        return currentLocation;
+    }
+
+    private void setMyLocationEnabledOnMap() {
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            Log.e(TAG, " Permission to Location is not Granted");
+        }
+    }
+
+    private void startLocationUpdates() {
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                    mLocationRequest, this);
+        } catch (SecurityException e) {
+            Log.e(TAG, " Permission to Location is not Granted");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult");
+        switch (requestCode) {
+
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                Boolean notNull =  grantResults != null && grantResults != null;
+                if ( notNull && grantResults.length < 1 || (!isPermissionToLocationAlreadyGranted())) {
+                    Toast.makeText(getContext(), R.string.unknown_location, Toast.LENGTH_LONG).show();
+                } else {
+                    locationPermissionsGranted();
+                }
+                break;
+            }
+        }
+    }
+
+    private void setUpMapWithLocation() {
+        myLocationToPlant = geLastKnowLatLng();
+        setMyLocationEnabledOnMap();
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
+    }
+
+    private void setUpMapClusterManager() {
+        mClusterManager = new ClusterManager<>(getActivity(), mMap);
+        mClusterManager.setRenderer(new PlantRenderer());
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
     }
 
     @Override
@@ -402,35 +451,9 @@ public class GardenMapFragment extends Fragment
         }
     }
 
-    private class PlantRenderer extends DefaultClusterRenderer<Plant> {
-        public PlantRenderer() {
-            super(getContext(), map, mClusterManager);
-        }
+    private void showConfirmPlantDialog(@NonNull final Context context, @NonNull final Plant plant) {
 
-        @Override
-        protected void onBeforeClusterItemRendered(Plant plant, MarkerOptions markerOptions) {
-            DateFormat df = SimpleDateFormat.getDateInstance();
-            df.setTimeZone(TimeZone.getDefault());
-            String plantedDate = df.format(plant.getWhen());
-            String gardener = "";
-            if (plant.getGardenerName() != null)
-                gardener = plant.getGardenerName();
-
-            markerOptions.title("" + plant.getName())
-                    .snippet(gardener + " plantou " + plant.getType() + " em " + plantedDate)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iplanted2));
-        }
-
-        @Override
-        protected boolean shouldRenderAsCluster(Cluster cluster) {
-            return cluster.getSize() > 1;
-        }
-    }
-
-
-    private void showConfirmPlantDialog(@NonNull final Context context, @NonNull final Plant plant){
-
-        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_confirm_plant, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -457,13 +480,38 @@ public class GardenMapFragment extends Fragment
         });
     }
 
-    public void dismissDialog(){
-        if(mShareDialog == null){
-            Log.e("Plantare","Share mShareDialog is null");
-        }else if(mShareDialog.isShowing()){
+    public void dismissDialog() {
+        if (mShareDialog == null) {
+            Log.e("Plantare", "Share mShareDialog is null");
+        } else if (mShareDialog.isShowing()) {
             mShareDialog.dismiss();
-        }else{
-            Log.e("Plantare","Share mShareDialog is not showing");
+        } else {
+            Log.e("Plantare", "Share mShareDialog is not showing");
+        }
+    }
+
+    private class PlantRenderer extends DefaultClusterRenderer<Plant> {
+        PlantRenderer() {
+            super(getContext(), mMap, mClusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(Plant plant, MarkerOptions markerOptions) {
+            DateFormat df = SimpleDateFormat.getDateInstance();
+            df.setTimeZone(TimeZone.getDefault());
+            String plantedDate = df.format(plant.getWhen());
+            String gardener = "";
+            if (plant.getGardenerName() != null)
+                gardener = plant.getGardenerName();
+
+            markerOptions.title("" + plant.getName())
+                    .snippet(gardener + " plantou " + plant.getType() + " em " + plantedDate)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iplanted2));
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            return cluster.getSize() > 1;
         }
     }
 }
