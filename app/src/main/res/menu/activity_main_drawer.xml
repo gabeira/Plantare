@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_plantation"
+            android:icon="@android:drawable/ic_dialog_map"
+            android:title="@string/title_section1" />
+        <item
+            android:id="@+id/nav_social"
+            android:icon="@drawable/iplanted2"
+            android:title="@string/title_section2" />
+        <item
+            android:id="@+id/nav_user"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/title_section3" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/action_share" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@android:drawable/ic_dialog_info"
+                android:title="Info" />
+        </menu>
+    </item>
+
+</menu>
