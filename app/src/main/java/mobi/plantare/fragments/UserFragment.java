@@ -3,7 +3,6 @@ package mobi.plantare.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -36,13 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
-import mobi.plantare.PlantareApp;
 import mobi.plantare.R;
 import mobi.plantare.adapters.ManagerListAdapter;
 import mobi.plantare.model.Gardener;
@@ -155,6 +152,10 @@ public class UserFragment extends Fragment {
         });
 
         updateUI(user);
+
+        LottieAnimationView animationView = (LottieAnimationView) view.findViewById(R.id.animation_view);
+        animationView.setAnimation("PinJump.json");
+        animationView.loop(true);
 
         //Initialize Facebook Login button
         //If use this method can't use setReadPermissions method
