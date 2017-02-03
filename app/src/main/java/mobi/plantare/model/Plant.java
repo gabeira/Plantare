@@ -1,6 +1,8 @@
 package mobi.plantare.model;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
@@ -8,6 +10,7 @@ import java.io.Serializable;
 /**
  * Created by gabeira@gmail.com on 6/23/16.
  */
+@IgnoreExtraProperties
 public class Plant implements Serializable, ClusterItem {
 
     private String id;
@@ -19,15 +22,19 @@ public class Plant implements Serializable, ClusterItem {
     private String type;
     private long when;
     private String photo;
+    private boolean active;
 
     public Plant() {
+        active = false;
     }
 
     public Plant(double lat, double lng) {
         latitude = lat;
         longitude = lng;
+        active = false;
     }
 
+    @Exclude
     @Override
     public LatLng getPosition() {
         return new LatLng(latitude, longitude);
@@ -57,10 +64,6 @@ public class Plant implements Serializable, ClusterItem {
         this.longitude = longitude;
     }
 
-//    public LatLng getWhere() {
-//        return new LatLng(latitude, longitude);
-//    }
-
     public String getGardenerId() {
         return gardenerId;
     }
@@ -68,7 +71,6 @@ public class Plant implements Serializable, ClusterItem {
     public void setGardenerId(String gardenerId) {
         this.gardenerId = gardenerId;
     }
-
 
     public String getGardenerName() {
         return gardenerName;
@@ -108,5 +110,13 @@ public class Plant implements Serializable, ClusterItem {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

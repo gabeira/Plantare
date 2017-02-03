@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:background="@color/primary_light"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="mobi.plantare.fragments.TutorialFragment">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:text="@string/welcome" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:text="@string/what_this_app_do" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/please_login_to_plant" />
+
+    <Button
+        android:id="@+id/facebook_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/bt_share_margin_top"
+        android:background="@color/com_facebook_button_background_color"
+        android:drawableLeft="@drawable/com_facebook_button_icon"
+        android:drawableStart="@drawable/com_facebook_button_icon"
+        android:onClick="loginFacebook"
+        android:text="@string/com_facebook_loginview_log_in_button"
+        android:textAllCaps="false"
+        android:textColor="@color/com_facebook_button_text_color" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/bt_share_margin_top" />
+
+    <Button
+        android:id="@+id/continue_without_login"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:onClick="continueWithoutLogin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/continue_anonymous"
+        android:textAllCaps="false" />
+</LinearLayout>
