@@ -40,9 +40,15 @@
     <string name="bt_not_now_title">Agora não, obrigado!</string>
 
     <!--Share action-->
+    <string name="action_share">Share</string>
     <string name="shared_success">Sua boa ação foi compartilhada com sucesso!</string>
     <string name="no_facebook_account_conected">Conecte-se ao Facebook para compartilhar</string>
     <string name="share_error">Falha ao compartilhar</string>
+
+    <string name="play_store_app_url" translatable="false">https://play.google.com/store/apps/details?id=mobi.plantare</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="please_login_to_plant">Por favor, faça o login para Plantar</string>
 
