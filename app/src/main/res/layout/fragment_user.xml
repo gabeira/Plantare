@@ -12,32 +12,35 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="User" />
+        android:text="@string/please_login_to_plant" />
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
+        android:id="@+id/button_facebook_login"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp" />
+
+    <Button
+        android:id="@+id/button_facebook_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
-
-    <!--<Button-->
-        <!--android:id="@+id/button_facebook_signout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:text="Facebook Sign_out"-->
-        <!--android:onClick="signOut"-->
-        <!--tools:visibility="visible"/>-->
+        android:background="@color/com_facebook_button_background_color"
+        android:text="@string/com_facebook_loginview_log_out_button"
+        android:textColor="@color/com_facebook_button_text_color"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <!--<com.google.android.gms.common.SignInButton-->
-        <!--android:id="@+id/sign_in_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:layout_marginTop="20dp" />-->
+    <!--android:id="@+id/sign_in_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginBottom="20dp"-->
+    <!--android:layout_marginTop="20dp" />-->
 
     <TextView
         android:layout_width="wrap_content"

@@ -349,7 +349,7 @@ public class GardenMapFragment extends Fragment
 
                 mClusterManager = new ClusterManager<Plant>(getActivity(), map);
                 mClusterManager.setRenderer(new PlantRenderer());
-                map.setOnCameraChangeListener(mClusterManager);
+                map.setOnCameraIdleListener(mClusterManager);
                 map.setOnMarkerClickListener(mClusterManager);
                 map.setOnInfoWindowClickListener(mClusterManager);
                 getPlants();
@@ -383,7 +383,7 @@ public class GardenMapFragment extends Fragment
 
                     mClusterManager = new ClusterManager<Plant>(getActivity(), map);
                     mClusterManager.setRenderer(new PlantRenderer());
-                    map.setOnCameraChangeListener(mClusterManager);
+                    map.setOnCameraIdleListener(mClusterManager);
                     map.setOnMarkerClickListener(mClusterManager);
                     map.setOnInfoWindowClickListener(mClusterManager);
                     getPlants();

@@ -7,20 +7,31 @@ import java.io.Serializable;
  */
 public class Gardener implements Serializable {
 
+    private String id;
     private String name;
     private String email;
     private String facebookUser;
     private long userSince;
     private long lastUse;
+    private int numberPlantsPlanted;
 
     public Gardener() {
     }
 
-    public Gardener(String name, String email, String facebookUser, long userSince) {
+    public Gardener(String id,String name, String email, String facebookUser, long userSince) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.facebookUser = facebookUser;
         this.userSince = userSince;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -61,5 +72,13 @@ public class Gardener implements Serializable {
 
     public void setLastUse(long lastUse) {
         this.lastUse = lastUse;
+    }
+
+    public int getNumberPlantsPlanted() {
+        return numberPlantsPlanted;
+    }
+
+    public void setNumberPlantsPlanted(int numberPlantsPlanted) {
+        this.numberPlantsPlanted = numberPlantsPlanted;
     }
 }

@@ -50,4 +50,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="please_login_to_plant">Por favor, faça o login para Plantar</string>
+
+    <!-- Tutorial -->
+    <string name="welcome">Seja bem vindo a App Plantare</string>
+    <string name="what_this_app_do">Contribua para um mundo melhor, plantando mais na sua cidade.\nCompartilhe suas plantas e descubra mais informações sobre plantas.</string>
+    <string name="continue_anonymous">Continuar sem login</string>
+
 </resources>
