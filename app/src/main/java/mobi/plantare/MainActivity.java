@@ -27,6 +27,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 
+import mobi.plantare.fragments.ContributorsFragment;
 import mobi.plantare.fragments.GardenMapFragment;
 import mobi.plantare.fragments.SocialFragment;
 import mobi.plantare.fragments.UserFragment;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
         //Initialize first fragment, maybe use Garden
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_main, new UserFragment())
+                .replace(R.id.content_main, new GardenMapFragment())
                 .commit();
     }
 
@@ -201,6 +202,10 @@ public class MainActivity extends AppCompatActivity
                     .setType("text/plain")
                     .setText(getString(R.string.play_store_app_url))
                     .getIntent(), getString(R.string.action_share)));
+        } else if (id == R.id.nav_contributors) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, new ContributorsFragment())
+                    .commit();
         } else if (id == R.id.nav_info) {
 
         }
