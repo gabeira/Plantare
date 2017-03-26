@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="mobi.plantare.fragments.GardenMapFragment">
@@ -9,28 +9,29 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_marginBottom="50dp"
         android:layout_height="fill_parent" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fabutton"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|right"-->
-        <!--android:stateListAnimator="@anim/anim"-->
-        <!--android:layout_marginRight="26dp"-->
-        <!--android:layout_marginBottom="26dp"/>-->
-
-    <Button
-        android:id="@+id/plante"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:text="Plante agora"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/where"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/accent"
-        android:textColor="#FFFFFF"
-        />
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="180dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/iplanted"
+        android:stateListAnimator="@anim/anim" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/plante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="110dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/iplanted2" />
 
 </RelativeLayout>

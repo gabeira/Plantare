@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -113,8 +114,16 @@ public class GardenMapFragment extends Fragment
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
-//        FloatingActionButton fabi = (FloatingActionButton) rootView.findViewById(R.id.fabutton);
-        Button plant = (Button) rootView.findViewById(R.id.plante);
+        FloatingActionButton whereToGetPlants = (FloatingActionButton) rootView.findViewById(R.id.where);
+        whereToGetPlants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Locais onde oferecem plantas Grátis", Toast.LENGTH_LONG).show();
+                //TODO Implementar o cadastro dos locais onde oferecem plantas Grátis
+            }
+        });
+
+        FloatingActionButton plant = (FloatingActionButton) rootView.findViewById(R.id.plante);
         plant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -415,8 +424,8 @@ public class GardenMapFragment extends Fragment
 
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                Boolean notNull =  grantResults != null && grantResults != null;
-                if ( notNull && grantResults.length < 1 || (!isPermissionToLocationAlreadyGranted())) {
+                Boolean notNull = grantResults != null && grantResults != null;
+                if (notNull && grantResults.length < 1 || (!isPermissionToLocationAlreadyGranted())) {
                     Toast.makeText(getContext(), R.string.unknown_location, Toast.LENGTH_LONG).show();
                 } else {
                     locationPermissionsGranted();
@@ -430,7 +439,9 @@ public class GardenMapFragment extends Fragment
         myLocationToPlant = geLastKnowLatLng();
         setMyLocationEnabledOnMap();
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
+        if (myLocationToPlant != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16));
+        }
     }
 
     private void setUpMapClusterManager() {

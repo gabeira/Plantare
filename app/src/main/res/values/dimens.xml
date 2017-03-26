@@ -20,5 +20,6 @@
     <dimen name="bt_not_now_margin_bottom">10dp</dimen>
     <dimen name="tx_thanks_message_size">16dp</dimen>
     <dimen name="tx_thanks_name_size">18dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

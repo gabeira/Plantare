@@ -2,8 +2,6 @@ package mobi.plantare;
 
 import android.app.Application;
 
-import com.firebase.client.Firebase;
-
 import mobi.plantare.model.Plant;
 
 /**
@@ -18,25 +16,23 @@ public class PlantareApp extends Application {
     public void onCreate() {
         super.onCreate();
         setInstance(this);
-        Firebase.setAndroidContext(this);
     }
 
-    private static void setInstance(PlantareApp mPlantareApp){
+    private static void setInstance(PlantareApp mPlantareApp) {
         mAplicationInstance = mPlantareApp;
     }
 
-    public static PlantareApp getInstance(){
+    public static PlantareApp getInstance() {
         return mAplicationInstance;
     }
 
-    public void setLastPlant(final Plant plant){
+    public void setLastPlant(final Plant plant) {
         this.plant = plant;
     }
 
-    public Plant getLastPlant(){
+    public Plant getLastPlant() {
         return plant;
     }
-
 
 
 }
