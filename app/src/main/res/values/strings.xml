@@ -62,5 +62,6 @@
     <string name="aplication">Aplicativo</string>
     <string name="info">Informações</string>
     <string name="app_contributors">Contribuidores do App</string>
+    <string name="sorry_not_possible_to_share">Sorry don\'t have a plant photo to share</string>
 
 </resources>
