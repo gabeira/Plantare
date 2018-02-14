@@ -12,18 +12,6 @@
         android:layout_height="fill_parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/where"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="180dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/iplanted"
-        android:stateListAnimator="@anim/anim" />
-
-    <android.support.design.widget.FloatingActionButton
         android:id="@+id/plante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +20,7 @@
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="110dp"
         android:layout_marginRight="10dp"
-        android:src="@drawable/iplanted2" />
+        android:src="@drawable/iplanted"
+        android:stateListAnimator="@anim/anim" />
 
 </RelativeLayout>
