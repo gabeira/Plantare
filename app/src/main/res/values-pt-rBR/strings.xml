@@ -1,16 +1,10 @@
 <resources>
     <string name="app_name">Plantare</string>
 
-    <string name="fb_login_protocol_scheme" translatable="false">880574782012124</string>
-
-    <string name="title_section1">Plants Map</string>
-    <string name="title_section2">Available Plants</string>
-    <string name="title_section3">My Plants</string>
-
+    <string name="title_section1">Mapa Plantas</string>
+    <string name="title_section2">Plantas Disponíveis</string>
+    <string name="title_section3">Minhas Plantas</string>
     <string name="action_settings">Settings</string>
-
-    <string name="google_geo_api_key" translatable="false">AIzaSyCq-U0Kzgn2rns09fa3iLpmI6XqWdU7GYY</string>
-    <string name="facebook_app_id" translatable="false">880574782012124</string>
 
     <!--Comfirm plant dialog -->
     <string name="tx_thanks_to_plant_title">Obrigado!</string>
@@ -25,8 +19,6 @@
     <string name="no_facebook_account_conected">Conecte-se ao Facebook para compartilhar</string>
     <string name="share_error">Falha ao compartilhar</string>
     <string name="unknown_location">Sem localização</string>
-
-    <string name="play_store_app_url" translatable="false">https://play.google.com/store/apps/details?id=mobi.plantare</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
