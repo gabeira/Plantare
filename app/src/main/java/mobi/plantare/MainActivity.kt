@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //Initialize first fragment, maybe use Garden
         supportFragmentManager.beginTransaction()
-                .replace(R.id.content_main, GardenMapFragment())
+                .replace(R.id.content_main, SocialFragment())
                 .commit()
     }
 
