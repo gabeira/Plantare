@@ -3,16 +3,16 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_social"
-            android:icon="@drawable/iplanted2"
+            android:id="@+id/nav_plants"
+            android:icon="@drawable/ic_local_florist_black_24dp"
             android:title="@string/title_section2" />
         <item
-            android:id="@+id/nav_plantation"
+            android:id="@+id/nav_map"
             android:icon="@android:drawable/ic_dialog_map"
             android:title="@string/title_section1" />
         <item
-            android:id="@+id/nav_user"
-            android:icon="@drawable/ic_user_black_24dp"
+            android:id="@+id/nav_my_plants"
+            android:icon="@drawable/ic_filter_vintage_black_24dp"
             android:title="@string/title_section3" />
     </group>
 
@@ -27,9 +27,9 @@
                 android:icon="@drawable/ic_group_black_24dp"
                 android:title="@string/app_contributors" />
             <item
-                android:id="@+id/nav_info"
-                android:icon="@android:drawable/ic_dialog_info"
-                android:title="@string/info" />
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="@string/action_settings" />
         </menu>
     </item>
 

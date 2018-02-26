@@ -23,7 +23,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="please_login_to_plant">Por favor, faça o login para Plantar</string>
+    <string name="please_login_to_plant">Por favor, faça o login para usar a App</string>
 
     <!-- Tutorial -->
     <string name="welcome">Seja bem vindo a App Plantare</string>

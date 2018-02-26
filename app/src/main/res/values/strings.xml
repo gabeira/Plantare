@@ -31,7 +31,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="please_login_to_plant">Por favor, faça o login para Plantar</string>
+    <string name="please_login_to_plant">Please login to use the App</string>
 
     <!-- Tutorial -->
     <string name="welcome">Seja bem vindo a App Plantare</string>
@@ -39,9 +39,9 @@
     <string name="continue_anonymous">Continuar sem login</string>
 
     <string name="contributions">Contribuições no Projeto</string>
-    <string name="aplication">Aplicativo</string>
+    <string name="aplication">Application</string>
     <string name="info">Informações</string>
-    <string name="app_contributors">Contribuidores do App</string>
+    <string name="app_contributors">App Developers</string>
     <string name="sorry_not_possible_to_share">Sorry don\'t have a plant photo to share</string>
 
 </resources>
