@@ -15,11 +15,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "149970706275-drbba1h1ugudjoh85c6d7jgssclu2pg1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobi.plantare",
+            "certificate_hash": "739a00cc45b061b62833603a19b03d787e07ead5"
+          }
+        },
+        {
+          "client_id": "149970706275-pcqqep4f92j2dn1debddnt4fkkijfphj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobi.plantare",
+            "certificate_hash": "923860fd55a2fae831ec837444ac08aecc3de11a"
+          }
+        },
+        {
+          "client_id": "149970706275-5144ifcorqir2626so0tpmsut13s1tlv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobi.plantare",
+            "certificate_hash": "f0a943a3b07699eb7f8e3b80fa00e2762f0056ec"
+          }
+        },
+        {
+          "client_id": "149970706275-c7k1vlt9dc1g0tr4nc6g4aev3o93ls5g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobi.plantare",
+            "certificate_hash": "972bfe844c69e5f86a86804007e085a0e1b7b4a7"
+          }
+        },
+        {
           "client_id": "149970706275-pn3kpfsibprpso7rbo1cp6npcs156sje.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "mobi.plantare",
-            "certificate_hash": "BAB1EC7B96AC45F507C9466DA63D9A00A03DFF0A"
+            "certificate_hash": "bab1ec7b96ac45f507c9466da63d9a00a03dff0a"
           }
         },
         {
@@ -29,7 +61,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDffoTFVM95CDIaK8oV8wq9B9ghlc379rQ"
+          "current_key": "AIzaSyCY5G1LazHRgJ_sPsNu_v1cm3Kkmic8ReU"
         }
       ],
       "services": {

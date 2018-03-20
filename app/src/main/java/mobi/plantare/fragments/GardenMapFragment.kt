@@ -89,8 +89,8 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context!!)
 
-        val plant = rootView.findViewById<View>(R.id.plante) as FloatingActionButton
-        plant.setOnClickListener { plant() }
+//        val plant = rootView.findViewById<View>(R.id.plante) as FloatingActionButton
+//        plant.setOnClickListener { plant() }
 
         handleMap()
         createLocationRequest()
@@ -366,6 +366,7 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
         myLocationToPlant = geLastKnowLatLng()
         setMyLocationEnabledOnMap()
         mMap!!.uiSettings.isMyLocationButtonEnabled = true
+        mMap!!.uiSettings.isZoomControlsEnabled = false
         if (myLocationToPlant != null) {
             mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocationToPlant, 16f))
         }
