@@ -211,6 +211,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         .commit()
             }
 
+        } else if (id == R.id.nav_leader_board) {
+            val currentUser = auth?.currentUser
+            if (currentUser != null) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.content_main, LeaderBoardFragment.newInstance())
+                        .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.content_main, UserFragment.newInstance())
+                        .commit()
+            }
+
         } else if (id == R.id.nav_my_plants) {
             val currentUser = auth?.currentUser
             if (currentUser != null) {

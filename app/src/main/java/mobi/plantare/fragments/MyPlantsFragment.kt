@@ -6,12 +6,21 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import mobi.plantare.R
 import mobi.plantare.adapters.ManagerListAdapter
-import java.util.ArrayList
+import mobi.plantare.adapters.SocialListAdapter
+import mobi.plantare.datasource.network.PlantsNetwork
+import mobi.plantare.model.Plant
+import java.util.*
 
 
 /**
@@ -39,13 +48,13 @@ class MyPlantsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_plants, container, false)
         //We can use this list to show another share option
-        recyclerView = view.findViewById<View>(R.id.recycler_view) as RecyclerView
-        val itens = ArrayList<String>()
-        itens.add("Teste 1")
-        itens.add("Teste 2")
-        adapter = ManagerListAdapter(itens)
-        recyclerView!!.adapter = adapter
-        recyclerView!!.layoutManager = LinearLayoutManager(this.activity)
+        val recyclerView = view.findViewById<View>(R.id.recycler_view) as RecyclerView
+
+        //Criando instância do adapter
+        mAdapter = SocialListAdapter(activity!!, plants)
+        recyclerView.adapter = mAdapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+
         return view
     }
 
@@ -77,4 +86,42 @@ class MyPlantsFragment : Fragment() {
     companion object {
         fun newInstance() = MyPlantsFragment()
     }
+
+    private var mAdapter: SocialListAdapter? = null
+
+    val plants: ArrayList<Plant>
+        get() {
+            //TODO Move this to PlantsNetwork
+            val database = FirebaseDatabase.getInstance()
+            val databasePlantsReference = database.getReference(PlantsNetwork.PLANTS_DATASET)
+
+            val lista = ArrayList<Plant>()
+
+            //https://firebase.google.com/docs/reference/js/firebase.database.Query
+            val myTopPostsQuery = databasePlantsReference.orderByChild("gardenerId").equalTo(FirebaseAuth.getInstance().currentUser?.uid)
+
+            myTopPostsQuery.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (!dataSnapshot.exists() || dataSnapshot.value == null) {
+                        Log.e("", "Failed to read value")
+                    }
+                    Log.e("Count", "Size: " + dataSnapshot.childrenCount)
+                    lista.clear()
+                    for (dataSnap in dataSnapshot.children) {
+                        val plant = dataSnap.getValue(Plant::class.java)
+                        if (plant != null) {
+                            lista.add(plant)
+                        }
+                    }
+                    mAdapter?.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+//                    Log.w(SocialFragment.TAG, "Failed to read value.", error.toException())
+                    //TODO Implement Error Scenario
+                }
+            })
+
+            return lista
+        }
 }

@@ -20,8 +20,8 @@ class Plant : Serializable, ClusterItem {
     var gardenerName: String? = null
     var name: String? = null
     var type: String? = null
-    //TODO change this name
-    var `when`: Long = 0
+
+    var registerDate: Long = 0
     var photo: String? = null
     var isActive: Boolean = false
 
