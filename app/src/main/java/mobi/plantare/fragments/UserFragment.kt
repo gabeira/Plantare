@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import mobi.plantare.R
+import mobi.plantare.datasource.network.PlantareUserNetwork
 
 /**
  * A simple [Fragment] subclass.
@@ -158,7 +159,7 @@ class UserFragment : Fragment() {
 //            val database = FirebaseDatabase.getInstance()
 //            val myRef = database.reference
 //            if (null != user) {
-//                val gardener = Gardener()
+//                val gardener = PlantareUser()
 //                gardener.id = user!!.uid
 //                gardener.name = user!!.displayName
 //                gardener.email = user!!.email
@@ -256,6 +257,9 @@ class UserFragment : Fragment() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success")
                         val user = mAuth!!.currentUser
+
+                        PlantareUserNetwork().saveUser(user!!)
+
                         updateUI(user)
                     } else {
                         // If sign in fails, display a message to the user.

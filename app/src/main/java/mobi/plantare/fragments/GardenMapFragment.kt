@@ -427,7 +427,7 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
         override fun onBeforeClusterItemRendered(plant: Plant?, markerOptions: MarkerOptions?) {
             val df = SimpleDateFormat.getDateInstance()
             df.timeZone = TimeZone.getDefault()
-            val plantedDate = df.format(plant!!.`when`)
+            val plantedDate = df.format(plant!!.registerDate)
             var gardener: String? = ""
             if (plant.gardenerName != null)
                 gardener = plant.gardenerName

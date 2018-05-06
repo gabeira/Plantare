@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_plant.*
+import mobi.plantare.datasource.network.PlantareUserNetwork
 import mobi.plantare.fragments.GardenMapFragment
 import mobi.plantare.model.Plant
 import java.io.ByteArrayOutputStream
@@ -85,16 +86,18 @@ class PlantActivity : AppCompatActivity() {
                 } else {
                     plant.gardenerName = Build.MANUFACTURER.toUpperCase() + " " + Build.MODEL
                 }
-                Log.d(TAG, "Gardener: " + plant.gardenerName)
+                Log.d(TAG, "PlantareUser: " + plant.gardenerName)
 
                 plant.id = UUID.randomUUID().toString()
                 plant.name = plant_name?.text.toString()
                 plant.type = plant_type?.text.toString()
-                plant.`when` = Calendar.getInstance().timeInMillis
+                plant.registerDate = Calendar.getInstance().timeInMillis
                 plant.latitude = local?.latitude!!
                 plant.longitude = local?.longitude!!
 
                 myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.id).setValue(plant)
+
+                PlantareUserNetwork().increaseUserPlants(FirebaseAuth.getInstance().currentUser?.uid!!)
 
                 //The plant and the photo is available for use by the application and
                 //avoids the problem with the bundle

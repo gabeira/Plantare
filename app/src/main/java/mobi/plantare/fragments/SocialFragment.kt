@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import mobi.plantare.R
 import mobi.plantare.adapters.SocialListAdapter
+import mobi.plantare.datasource.network.PlantsNetwork
 import mobi.plantare.model.Plant
 import java.util.*
 
@@ -39,24 +40,25 @@ class SocialFragment : Fragment() {
     val plants: ArrayList<Plant>
         get() {
             val database = FirebaseDatabase.getInstance()
-            val myRef = database.getReference(PLANTS_DATASET)
+            val myRef = database.getReference(PlantsNetwork.PLANTS_DATASET)
 
             val lista = ArrayList<Plant>()
 
-            myRef.addValueEventListener(object : ValueEventListener {
+            val myOrderedQuery = myRef
+                    .orderByChild("registerDate")
+
+            myOrderedQuery.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (!dataSnapshot.exists() || dataSnapshot.value == null) {
                         Log.e(TAG, "Failed to read value")
                     }
                     Log.e(TAG, "Size: " + dataSnapshot.childrenCount)
+                    lista.clear()
                     for (dataSnap in dataSnapshot.children) {
                         val plant = dataSnap.getValue(Plant::class.java)
                         if (plant != null) {
                             lista.add(plant)
                         }
-                        Log.e(TAG, "Plant (name): " + plant?.name!!)
-                        Log.e(TAG, "Plant (type): " + plant?.type)
-                        Log.e(TAG, "Plant (photo): " + plant?.photo)
                     }
                     mAdapter?.notifyDataSetChanged()
                 }
@@ -105,7 +107,6 @@ class SocialFragment : Fragment() {
     }
 
     companion object {
-        private val PLANTS_DATASET = "plants"
         private val TAG = "Plants"
         @JvmStatic
         fun newInstance() = SocialFragment()

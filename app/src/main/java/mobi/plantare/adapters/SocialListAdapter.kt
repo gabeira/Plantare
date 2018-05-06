@@ -12,6 +12,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.item_social_list.view.*
 import mobi.plantare.R
 import mobi.plantare.model.Plant
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by jbalves on 10/6/16.
@@ -32,8 +34,13 @@ class SocialListAdapter(private val context: Context, private val mValues: Array
         val plant = mValues[position]
 
         //Seta os valores da Planta para o layout dentro do Holder
-        holder.namePlantView.text = plant.name
-        holder.descriptionPlantView.text = plant.type
+
+        val df = SimpleDateFormat.getDateInstance()
+        df.timeZone = TimeZone.getDefault()
+        val plantedDate = df.format(plant!!.registerDate)
+
+        holder.namePlantView.text = plant.type?.capitalize() + ",  " + plant.name?.capitalize()
+        holder.descriptionPlantView.text = plant.gardenerName + " offered since " + plantedDate
 
         if (plant.photo == null) {
             holder.imgPlantView.setImageResource(R.mipmap.ic_launcher)
