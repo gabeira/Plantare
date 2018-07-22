@@ -95,7 +95,7 @@ class PlantActivity : AppCompatActivity() {
                 plant.latitude = local?.latitude!!
                 plant.longitude = local?.longitude!!
 
-                myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.id).setValue(plant)
+                myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.id!!).setValue(plant)
 
                 PlantareUserNetwork().increaseUserPlants(FirebaseAuth.getInstance().currentUser?.uid!!)
 

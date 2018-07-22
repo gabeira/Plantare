@@ -34,29 +34,29 @@ class PlantareUserNetwork {
         //TODO Verify why this single update is not working
 
         //https://firebase.google.com/docs/database/android/read-and-write#save_data_as_transactions
-        databaseUserReference.child(userIdToUpdate!!).runTransaction(object : Transaction.Handler {
-            override fun doTransaction(mutableData: MutableData): Transaction.Result? {
-
-                val p = mutableData.getValue<PlantareUser>(PlantareUser::class.java)
-                        ?: return Transaction.success(mutableData)
-
-                if (up) {
-                    p.numberPlantsDonated++
-                } else {
-                    if (p.numberPlantsDonated > 0)
-                        p.numberPlantsDonated--
-                }
-                // Set value and report transaction success
-                mutableData.value = p
-                return Transaction.success(mutableData)
-            }
-
-            override fun onComplete(databaseError: DatabaseError, b: Boolean,
-                                    dataSnapshot: DataSnapshot) {
-                // Transaction completed
-                Log.d("", "postTransaction:onComplete:$databaseError")
-            }
-        })
+//        databaseUserReference.child(userIdToUpdate!!).runTransaction(object : Transaction.Handler {
+//            override fun doTransaction(mutableData: MutableData): Transaction.Result? {
+//
+//                val p = mutableData.getValue<PlantareUser>(PlantareUser::class.java)
+//                        ?: return Transaction.success(mutableData)
+//
+//                if (up) {
+//                    p.numberPlantsDonated++
+//                } else {
+//                    if (p.numberPlantsDonated > 0)
+//                        p.numberPlantsDonated--
+//                }
+//                // Set value and report transaction success
+//                mutableData.value = p
+//                return Transaction.success(mutableData)
+//            }
+//
+//            override fun onComplete(databaseError: DatabaseError, b: Boolean,
+//                                    dataSnapshot: DataSnapshot) {
+//                // Transaction completed
+//                Log.d("", "postTransaction:onComplete:$databaseError")
+//            }
+//        })
     }
 
     fun saveUser(firebaseUser: FirebaseUser) {
