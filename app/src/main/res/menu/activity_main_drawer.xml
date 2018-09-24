@@ -9,11 +9,13 @@
         <item
             android:id="@+id/nav_map"
             android:icon="@android:drawable/ic_dialog_map"
-            android:title="@string/title_section1" />
+            android:title="@string/title_section1"
+            android:visible="false" />
         <item
             android:id="@+id/nav_leader_board"
             android:icon="@drawable/ic_group_black_24dp"
-            android:title="@string/leader_board" />
+            android:title="@string/leader_board"
+            android:visible="false" />
         <item
             android:id="@+id/nav_my_plants"
             android:icon="@drawable/ic_filter_vintage_black_24dp"

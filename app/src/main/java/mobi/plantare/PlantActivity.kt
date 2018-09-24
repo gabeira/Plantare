@@ -95,7 +95,7 @@ class PlantActivity : AppCompatActivity() {
                 plant.latitude = local?.latitude!!
                 plant.longitude = local?.longitude!!
 
-                myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.id).setValue(plant)
+                myRef.child(GardenMapFragment.PLANTS_DATASET).child(plant.id!!).setValue(plant)
 
                 PlantareUserNetwork().increaseUserPlants(FirebaseAuth.getInstance().currentUser?.uid!!)
 
@@ -117,11 +117,11 @@ class PlantActivity : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         var stream: InputStream? = null
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             try {
-                val extras = data.extras
+                val extras = data?.extras
                 val imageBitmap = extras?.get("data") as Bitmap
                 val bYtE = ByteArrayOutputStream()
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, bYtE)
@@ -142,7 +142,7 @@ class PlantActivity : AppCompatActivity() {
 
         } else if (requestCode == REQUEST_GALLERY_CODE && resultCode == Activity.RESULT_OK) {
             try {
-                stream = contentResolver.openInputStream(data.data)
+                stream = contentResolver.openInputStream(data?.data)
                 val options = BitmapFactory.Options()
                 options.inSampleSize = 2
                 val imageBitmap = BitmapFactory.decodeStream(stream, Rect(-1, -1, -1, -1), options)

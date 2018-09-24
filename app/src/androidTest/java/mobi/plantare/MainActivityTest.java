@@ -2,9 +2,9 @@ package mobi.plantare;
 
 
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -41,15 +41,15 @@ public class MainActivityTest {
             e.printStackTrace();
         }
 
-        ViewInteraction viewGroup = onView(
+        ViewInteraction button = onView(
                 allOf(childAtPosition(
-                        allOf(withId(android.R.id.content),
+                        allOf(withId(R.id.sign_in_button),
                                 childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class),
+                                        IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
                                         0)),
                         0),
                         isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
+        button.check(matches(isDisplayed()));
 
     }
 
