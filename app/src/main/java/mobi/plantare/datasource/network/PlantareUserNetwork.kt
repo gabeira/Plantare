@@ -1,13 +1,9 @@
 package mobi.plantare.datasource.network
 
 import android.os.Build
-import android.util.Log
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
-import mobi.plantare.BuildConfig
+import com.google.firebase.database.FirebaseDatabase
 import mobi.plantare.model.PlantareUser
-import org.apache.commons.lang3.StringUtils
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -62,7 +58,7 @@ class PlantareUserNetwork {
     fun saveUser(firebaseUser: FirebaseUser) {
 
         val deviceList = mutableListOf<String>()
-        deviceList.add(StringUtils.capitalize(Build.MANUFACTURER) + " - " + Build.MODEL)
+        deviceList.add(Build.MANUFACTURER.capitalize() + " - " + Build.MODEL)
 
         val user = PlantareUser(
                 firebaseUser.uid!!,
