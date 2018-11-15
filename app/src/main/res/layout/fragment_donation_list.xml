@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="mobi.plantare.fragments.LeaderBoardFragment"
+    android:id="@+id/recyclerViewPlants"
+    android:name="mobi.plantare.fragments.DonationPlantListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobi.plantare.fragments.LeaderBoardFragment"
-    tools:listitem="@layout/item_contributor" />
+    tools:context="mobi.plantare.fragments.DonationPlantListFragment"
+    tools:listitem="@layout/item_plant" />

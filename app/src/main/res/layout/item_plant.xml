@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="6dp">
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/imgPlant"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="centerCrop"/>
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        android:src="@drawable/iplanted" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/imgPlant">
+        android:layout_toEndOf="@+id/imgPlant"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/namePlant"
-            android:paddingLeft="8dp"
-            android:paddingRight="60dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"/>
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textSize="16sp"
+            tools:text="Plant Name" />
 
         <TextView
             android:id="@+id/descriptionPlant"
-            android:paddingLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"/>
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textSize="14sp"
+            tools:text="Plant Description" />
 
     </LinearLayout>
 

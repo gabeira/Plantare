@@ -1,11 +1,10 @@
 package mobi.plantare.fragments
 
 import android.content.Context
-import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +14,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.fragment_my_plants.view.*
+import mobi.plantare.PlantActivity
+import mobi.plantare.PlantDetailActivity
 import mobi.plantare.R
-import mobi.plantare.adapters.ManagerListAdapter
-import mobi.plantare.adapters.SocialListAdapter
+import mobi.plantare.adapters.MyPlantAdapter
 import mobi.plantare.datasource.network.PlantsNetwork
 import mobi.plantare.model.Plant
 import java.util.*
@@ -33,41 +34,41 @@ import java.util.*
  */
 class MyPlantsFragment : Fragment() {
 
-
-    private var recyclerView: RecyclerView? = null
-    private var adapter: ManagerListAdapter? = null
-
-    private var mListener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var mListener: OnMyPlantItemInteractionListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_plants, container, false)
         //We can use this list to show another share option
-        val recyclerView = view.findViewById<View>(R.id.recycler_view) as RecyclerView
 
         //Criando instância do adapter
-        mAdapter = SocialListAdapter(activity!!, plants)
-        recyclerView.adapter = mAdapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        mAdapter = MyPlantAdapter(view.context, plants, object : OnMyPlantItemInteractionListener {
+            override fun onEditItemClick(plant: Plant) {
+                //TODO Implement Edit plant
+                activity?.startActivity(Intent(context, PlantActivity::class.java))
+            }
+
+            override fun onDeleteItemClick(plant: Plant) {
+                deleteThisPlant(plant)
+            }
+        })
+        view.recyclerViewPlants.adapter = mAdapter
+        view.recyclerViewPlants.layoutManager = LinearLayoutManager(activity)
 
         return view
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
+    private fun deleteThisPlant(plant: Plant) {
+        //TODO Improve delete plant
+        val database = FirebaseDatabase.getInstance()
+        val databasePlantsReference = database.getReference(PlantsNetwork.PLANTS_DATASET)
+        databasePlantsReference.child(plant.id!!).removeValue()
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnMyPlantItemInteractionListener) {
             mListener = context
 //        } else {
 //            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
@@ -79,17 +80,19 @@ class MyPlantsFragment : Fragment() {
         mListener = null
     }
 
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+
+    interface OnMyPlantItemInteractionListener {
+        fun onEditItemClick(plant: Plant)
+        fun onDeleteItemClick(plant: Plant)
     }
 
     companion object {
         fun newInstance() = MyPlantsFragment()
     }
 
-    private var mAdapter: SocialListAdapter? = null
+    private lateinit var mAdapter: MyPlantAdapter
 
-    val plants: ArrayList<Plant>
+    private val plants: ArrayList<Plant>
         get() {
             //TODO Move this to PlantsNetwork
             val database = FirebaseDatabase.getInstance()
@@ -113,11 +116,11 @@ class MyPlantsFragment : Fragment() {
                             lista.add(plant)
                         }
                     }
-                    mAdapter?.notifyDataSetChanged()
+                    mAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-//                    Log.w(SocialFragment.TAG, "Failed to read value.", error.toException())
+//                    Log.w(DonationPlantListFragment.TAG, "Failed to read value.", error.toException())
                     //TODO Implement Error Scenario
                 }
             })

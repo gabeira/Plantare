@@ -4,8 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:orientation="horizontal">
 
     <ImageView
@@ -13,12 +13,12 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:contentDescription="@string/app_name"
-        android:src="@color/primary_light" />
+        android:src="@drawable/ic_user_black_24dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
 
         <TextView
@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/button_press_elevation"
+                android:layout_marginStart="@dimen/button_press_elevation"
                 android:text="@string/contributions"
                 android:textAppearance="?attr/textAppearanceListItem" />
         </LinearLayout>

@@ -21,5 +21,7 @@
     <dimen name="tx_thanks_message_size">16dp</dimen>
     <dimen name="tx_thanks_name_size">18dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>
