@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.item_social_list.view.*
+import kotlinx.android.synthetic.main.item_plant.view.*
 import mobi.plantare.R
+import mobi.plantare.fragments.DonationPlantListFragment
+import mobi.plantare.model.AppContributor
 import mobi.plantare.model.Plant
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,12 +21,15 @@ import java.util.*
  * Created by jbalves on 10/6/16.
  */
 
-class SocialListAdapter(private val context: Context, private val mValues: ArrayList<Plant>) : RecyclerView.Adapter<SocialListAdapter.ViewHolder>() {
+class PlantAdapter(val context: Context,
+                   val mValues: ArrayList<Plant>,
+                   val plantListener: DonationPlantListFragment.OnPlantItemInteractionListener)
+    : RecyclerView.Adapter<PlantAdapter.ViewHolder>() {
 
     //#3 Step - Monta o layout na lista
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_social_list, parent, false)
+                .inflate(R.layout.item_plant, parent, false)
         return ViewHolder(view)
     }
 
@@ -40,6 +45,7 @@ class SocialListAdapter(private val context: Context, private val mValues: Array
         val plantedDate = df.format(plant!!.registerDate)
 
         holder.namePlantView.text = plant.type?.capitalize() + ",  " + plant.name?.capitalize()
+        //TODO Extract String for internacionalization
         holder.descriptionPlantView.text = plant.gardenerName + " offered since " + plantedDate
 
         if (plant.photo == null) {
@@ -49,6 +55,10 @@ class SocialListAdapter(private val context: Context, private val mValues: Array
             val imageBytesArray = Base64.decode(plant.photo, Base64.DEFAULT)
             val bmp = BitmapFactory.decodeByteArray(imageBytesArray, 0, imageBytesArray.size)
             holder.imgPlantView.setImageBitmap(bmp)
+        }
+
+        holder.itemView.setOnClickListener {
+            plantListener.onPlantListItemClick(plant)
         }
     }
 

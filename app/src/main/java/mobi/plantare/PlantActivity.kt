@@ -39,6 +39,7 @@ class PlantActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plant)
+        //TODO Adicionar Toolbar corretamente
         setActionBar()
 
         local = intent.getParcelableExtra(GardenMapFragment.LOCATION_TO_PLANT)
@@ -68,6 +69,10 @@ class PlantActivity : AppCompatActivity() {
 
     fun submit(view: View) {
         try {
+            //TODO Internacionalizar Strings
+            //TODO Implementar Seleçao do Endereço da Planta para Doaçao
+            local = LatLng(0.0, 0.0)
+            //TODO Remover Hard code local
             if (local == null) {
                 Toast.makeText(applicationContext, "Erro: Localizacao sem valor, por favor tentar novamente", Toast.LENGTH_LONG).show()
             } else if (plant_name == null || plant_name?.text == null || plant_name?.text.toString().isEmpty()) {
@@ -90,6 +95,7 @@ class PlantActivity : AppCompatActivity() {
 
                 plant.id = UUID.randomUUID().toString()
                 plant.name = plant_name?.text.toString()
+                //TODO Implementar Tipo vindo da base de dados, e não qualquer palavra
                 plant.type = plant_type?.text.toString()
                 plant.registerDate = Calendar.getInstance().timeInMillis
                 plant.latitude = local?.latitude!!

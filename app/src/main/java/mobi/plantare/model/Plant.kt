@@ -39,4 +39,14 @@ class Plant : Serializable, ClusterItem {
     override fun getPosition(): LatLng {
         return LatLng(latitude, longitude)
     }
+
+    @Exclude
+    override fun getTitle(): String {
+        return "Title" //TODO Implement CLusterItem Title for Maps
+    }
+
+    @Exclude
+    override fun getSnippet(): String {
+        return "Snippet" //TODO Implement CLusterItem Snippet for Maps
+    }
 }

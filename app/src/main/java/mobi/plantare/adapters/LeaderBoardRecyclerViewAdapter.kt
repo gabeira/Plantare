@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.item_social_list.view.*
+import kotlinx.android.synthetic.main.item_plant.view.*
 import mobi.plantare.R
 import mobi.plantare.fragments.LeaderBoardFragment.OnListFragmentInteractionListener
 import mobi.plantare.model.PlantareUser
@@ -21,7 +21,7 @@ class LeaderBoardRecyclerViewAdapter(private val context: Context, private val m
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_social_list, parent, false)
+                .inflate(R.layout.item_plant, parent, false)
         return ViewHolder(view)
     }
 

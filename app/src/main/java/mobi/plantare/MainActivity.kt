@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (currentUser != null) {
             updateUserInfo(currentUser.displayName!!, currentUser.email!!, currentUser.photoUrl.toString())
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.content_main, SocialFragment.newInstance())
+                    .replace(R.id.content_main, DonationPlantListFragment.newInstance())
                     .commit()
         } else {
             updateUserInfo("", "", "")
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val currentUser = auth?.currentUser
             if (currentUser != null) {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.content_main, SocialFragment.newInstance())
+                        .replace(R.id.content_main, DonationPlantListFragment.newInstance())
                         .commit()
             } else {
                 updateUserInfo("", "", "")
