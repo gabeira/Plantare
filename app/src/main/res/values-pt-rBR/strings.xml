@@ -36,4 +36,6 @@
     <string name="app_contributors">Contribuidores do App</string>
     <string name="sorry_not_possible_to_share">Sorry don\'t have a plant photo to share</string>
 
+    <string name="leader_board">Leader Board</string>
+    <string name="title_activity_plant_detail">PlantDetailActivity</string>
 </resources>

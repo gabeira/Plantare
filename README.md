@@ -1,4 +1,6 @@
 # Plantare App
+[![CircleCI](https://circleci.com/gh/gabeira/Plantare.svg?style=svg)](https://circleci.com/gh/gabeira/Plantare)
+
 This is an Android App to share Plants. 
 Created as a Community Project, Open Source and non-profit.[Give a Like on Facebook](https://www.facebook.com/plantare.mobi)
 
