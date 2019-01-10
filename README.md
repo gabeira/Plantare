@@ -37,7 +37,7 @@ To configure follow steps below:
 
 - (Optional) To install debug app from command line use:
 
-      ./adb install /app/build/outputs/apk/app-debug.apk
+      ./adb install /app/build/outputs/apk/debug/app-debug.apk
 
 ## External Libs Reference
 
