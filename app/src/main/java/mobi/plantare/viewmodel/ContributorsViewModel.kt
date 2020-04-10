@@ -1,8 +1,8 @@
 package mobi.plantare.viewmodel
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import android.util.Log
 import mobi.plantare.model.AppContributor
 import mobi.plantare.repository.ContributorsRepository
@@ -29,7 +29,10 @@ class ContributorsViewModel : ViewModel() {
 
     fun loadContributors() {
         ContributorsRepository().getContributors(object : Callback<List<AppContributor>> {
-            override fun onResponse(call: Call<List<AppContributor>>, response: Response<List<AppContributor>>) {
+            override fun onResponse(
+                call: Call<List<AppContributor>>,
+                response: Response<List<AppContributor>>
+            ) {
                 observableContributorsList.value = response.body()
             }
 

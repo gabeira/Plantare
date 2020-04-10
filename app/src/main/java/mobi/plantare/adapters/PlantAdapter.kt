@@ -2,17 +2,16 @@ package mobi.plantare.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.support.v7.widget.RecyclerView
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_plant.view.*
 import mobi.plantare.R
 import mobi.plantare.fragments.DonationPlantListFragment
-import mobi.plantare.model.AppContributor
 import mobi.plantare.model.Plant
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,16 +19,16 @@ import java.util.*
 /**
  * Created by jbalves on 10/6/16.
  */
-
-class PlantAdapter(val context: Context,
-                   val mValues: ArrayList<Plant>,
-                   val plantListener: DonationPlantListFragment.OnPlantItemInteractionListener)
-    : RecyclerView.Adapter<PlantAdapter.ViewHolder>() {
+class PlantAdapter(
+    val context: Context,
+    val mValues: ArrayList<Plant>,
+    val plantListener: DonationPlantListFragment.OnPlantItemInteractionListener
+) : RecyclerView.Adapter<PlantAdapter.ViewHolder>() {
 
     //#3 Step - Monta o layout na lista
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_plant, parent, false)
+            .inflate(R.layout.item_plant, parent, false)
         return ViewHolder(view)
     }
 
@@ -39,7 +38,6 @@ class PlantAdapter(val context: Context,
         val plant = mValues[position]
 
         //Seta os valores da Planta para o layout dentro do Holder
-
         val df = SimpleDateFormat.getDateInstance()
         df.timeZone = TimeZone.getDefault()
         val plantedDate = df.format(plant!!.registerDate)
@@ -56,12 +54,10 @@ class PlantAdapter(val context: Context,
             val bmp = BitmapFactory.decodeByteArray(imageBytesArray, 0, imageBytesArray.size)
             holder.imgPlantView.setImageBitmap(bmp)
         }
-
         holder.itemView.setOnClickListener {
             plantListener.onPlantListItemClick(plant)
         }
     }
-
 
     //#5 Step - Conta a quantidade de elementos existente na lista
     override fun getItemCount(): Int {
@@ -70,10 +66,8 @@ class PlantAdapter(val context: Context,
 
     //#2 Step - Mapeia os elementos do layout
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         val namePlantView: TextView = itemView.namePlant
         val descriptionPlantView: TextView = itemView.descriptionPlant
         val imgPlantView: ImageView = itemView.imgPlant
-
     }
 }

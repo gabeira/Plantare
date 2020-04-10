@@ -3,12 +3,12 @@ package mobi.plantare.fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_my_plants.view.*
 import mobi.plantare.PlantActivity
-import mobi.plantare.PlantDetailActivity
 import mobi.plantare.R
 import mobi.plantare.adapters.MyPlantAdapter
 import mobi.plantare.datasource.network.PlantsNetwork
@@ -36,8 +35,10 @@ class MyPlantsFragment : Fragment() {
 
     private var mListener: OnMyPlantItemInteractionListener? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_plants, container, false)
         //We can use this list to show another share option
@@ -66,7 +67,7 @@ class MyPlantsFragment : Fragment() {
         databasePlantsReference.child(plant.id!!).removeValue()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnMyPlantItemInteractionListener) {
             mListener = context
@@ -101,7 +102,8 @@ class MyPlantsFragment : Fragment() {
             val lista = ArrayList<Plant>()
 
             //https://firebase.google.com/docs/reference/js/firebase.database.Query
-            val myTopPostsQuery = databasePlantsReference.orderByChild("gardenerId").equalTo(FirebaseAuth.getInstance().currentUser?.uid)
+            val myTopPostsQuery = databasePlantsReference.orderByChild("gardenerId")
+                .equalTo(FirebaseAuth.getInstance().currentUser?.uid)
 
             myTopPostsQuery.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {

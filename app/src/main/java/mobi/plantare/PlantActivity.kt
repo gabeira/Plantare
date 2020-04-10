@@ -7,12 +7,13 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -58,8 +59,10 @@ class PlantActivity : AppCompatActivity() {
     }
 
     fun pickFromGallery(View: View?) {
-        val intent = Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent(
+            Intent.ACTION_PICK,
+            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
         startActivityForResult(intent, REQUEST_GALLERY_CODE)
     }
 
@@ -74,12 +77,22 @@ class PlantActivity : AppCompatActivity() {
             local = LatLng(0.0, 0.0)
             //TODO Remover Hard code local
             if (local == null) {
-                Toast.makeText(applicationContext, "Erro: Localizacao sem valor, por favor tentar novamente", Toast.LENGTH_LONG).show()
-            } else if (plant_name == null || plant_name?.text == null || plant_name?.text.toString().isEmpty()) {
-                Toast.makeText(applicationContext, "Nome da Planta Obrigatorio", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Erro: Localizacao sem valor, por favor tentar novamente",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else if (plant_name == null || plant_name?.text == null || plant_name?.text.toString()
+                    .isEmpty()
+            ) {
+                Toast.makeText(applicationContext, "Nome da Planta Obrigatorio", Toast.LENGTH_LONG)
+                    .show()
                 plant_name?.error = "Nome da Planta Obrigatorio"
-            } else if (plant_type == null || plant_type?.text == null || plant_type?.text.toString().isEmpty()) {
-                Toast.makeText(applicationContext, "Tipo da Planta Obrigatorio", Toast.LENGTH_LONG).show()
+            } else if (plant_type == null || plant_type?.text == null || plant_type?.text.toString()
+                    .isEmpty()
+            ) {
+                Toast.makeText(applicationContext, "Tipo da Planta Obrigatorio", Toast.LENGTH_LONG)
+                    .show()
                 plant_type?.error = "Tipo da Planta Obrigatorio"
             } else {
                 val database = FirebaseDatabase.getInstance()
@@ -117,7 +130,8 @@ class PlantActivity : AppCompatActivity() {
                 finish()
             }
         } catch (e: Exception) {
-            Toast.makeText(applicationContext, "Erro:" + e.localizedMessage, Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Erro:" + e.localizedMessage, Toast.LENGTH_LONG)
+                .show()
             e.printStackTrace()
         }
 
@@ -140,15 +154,17 @@ class PlantActivity : AppCompatActivity() {
                 //                    imageBitmap.recycle();
 
             } catch (e: RuntimeException) {
-                Toast.makeText(applicationContext,
-                        "Error: " + e.localizedMessage,
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Error: " + e.localizedMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
                 e.printStackTrace()
             }
 
         } else if (requestCode == REQUEST_GALLERY_CODE && resultCode == Activity.RESULT_OK) {
             try {
-                stream = contentResolver.openInputStream(data?.data)
+                stream = contentResolver.openInputStream(data?.data?: Uri.EMPTY)
                 val options = BitmapFactory.Options()
                 options.inSampleSize = 2
                 val imageBitmap = BitmapFactory.decodeStream(stream, Rect(-1, -1, -1, -1), options)
@@ -163,14 +179,18 @@ class PlantActivity : AppCompatActivity() {
                 //                if (imageBitmap != null)
                 //                    imageBitmap.recycle();
             } catch (e: FileNotFoundException) {
-                Toast.makeText(applicationContext,
-                        "Error: " + e.localizedMessage,
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Error: " + e.localizedMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
                 e.printStackTrace()
             } catch (e: RuntimeException) {
-                Toast.makeText(applicationContext,
-                        "Error: " + e.localizedMessage,
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Error: " + e.localizedMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
                 e.printStackTrace()
             } finally {
                 if (stream != null) {
@@ -187,11 +207,17 @@ class PlantActivity : AppCompatActivity() {
 
     private fun permission() {
         // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.CAMERA),
-                    MY_PERMISSIONS_REQUEST_CAMERA)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                MY_PERMISSIONS_REQUEST_CAMERA
+            )
         } else {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (takePictureIntent.resolveActivity(packageManager) != null) {
@@ -200,9 +226,11 @@ class PlantActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_CAMERA -> {
                 // If request is cancelled, the result arrays are empty.

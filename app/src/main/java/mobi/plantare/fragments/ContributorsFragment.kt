@@ -1,28 +1,19 @@
 package mobi.plantare.fragments
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
-
-import org.json.JSONArray
-
-import java.io.IOException
-import java.util.ArrayList
-
 import mobi.plantare.R
 import mobi.plantare.adapters.ContributorsAdapter
 import mobi.plantare.model.AppContributor
 import mobi.plantare.viewmodel.ContributorsViewModel
+import java.util.*
 
 /**
  * A fragment representing a list of Items.
@@ -46,23 +37,29 @@ class ContributorsFragment : Fragment() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_contributors, container, false)
         mFirebaseAnalytics?.setCurrentScreen(activity!!, "Contributors", null)
 
         // Set the adapter
-        if (view is RecyclerView) {
+        if (view is androidx.recyclerview.widget.RecyclerView) {
             val context = view.getContext()
-            view.layoutManager = LinearLayoutManager(context)
+            view.layoutManager =
+                androidx.recyclerview.widget.LinearLayoutManager(context)
             contributorsAdapter = ContributorsAdapter(getContext()!!, ArrayList(), listener)
             view.adapter = contributorsAdapter
         }
-        val mLiveDataTimerViewModel = ViewModelProviders.of(this).get(ContributorsViewModel::class.java!!)
-        mLiveDataTimerViewModel.getContributorsObserver().observe(this, Observer<List<AppContributor>> { listOfContributors ->
-            contributorsAdapter!!.setContributors(listOfContributors!!)
-        })
+        val mLiveDataTimerViewModel =
+            ViewModelProvider.AndroidViewModelFactory(activity?.application!!)
+                .create(ContributorsViewModel::class.java)
+        mLiveDataTimerViewModel.getContributorsObserver()
+            .observe(this, Observer { listOfContributors ->
+                contributorsAdapter!!.setContributors(listOfContributors!!)
+            })
         return view
     }
 

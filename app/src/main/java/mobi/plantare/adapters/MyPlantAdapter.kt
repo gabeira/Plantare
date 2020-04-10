@@ -2,7 +2,6 @@ package mobi.plantare.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.support.v7.widget.RecyclerView
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_my_plant.view.*
 import mobi.plantare.R
 import mobi.plantare.fragments.MyPlantsFragment
@@ -21,15 +21,16 @@ import java.util.*
  * Created by jbalves on 10/6/16.
  */
 
-class MyPlantAdapter(val context: Context,
-                     val mValues: ArrayList<Plant>,
-                     val plantListener: MyPlantsFragment.OnMyPlantItemInteractionListener)
-    : RecyclerView.Adapter<MyPlantAdapter.ViewHolder>() {
+class MyPlantAdapter(
+    val context: Context,
+    val mValues: ArrayList<Plant>,
+    val plantListener: MyPlantsFragment.OnMyPlantItemInteractionListener
+) : RecyclerView.Adapter<MyPlantAdapter.ViewHolder>() {
 
     //#3 Step - Monta o layout na lista
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_my_plant, parent, false)
+            .inflate(R.layout.item_my_plant, parent, false)
         return ViewHolder(view)
     }
 
@@ -65,7 +66,6 @@ class MyPlantAdapter(val context: Context,
         }
     }
 
-
     //#5 Step - Conta a quantidade de elementos existente na lista
     override fun getItemCount(): Int {
         return mValues.size
@@ -73,7 +73,6 @@ class MyPlantAdapter(val context: Context,
 
     //#2 Step - Mapeia os elementos do layout
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         val namePlantView: TextView = itemView.namePlant
         val descriptionPlantView: TextView = itemView.descriptionPlant
         val imgPlantView: ImageView = itemView.imgPlant
