@@ -7,10 +7,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +47,8 @@ import java.util.*
  * A placeholder fragment containing a simple view.
  * Created by gabriel on 7/1/15.
  */
-class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener {
     private var mMap: GoogleMap? = null
     private var myLocationToPlant: LatLng? = null
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
@@ -58,19 +58,26 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
     private var mShareDialog: AlertDialog? = null
 
     private val isNecessaryToExplainToUserWhyTheLocationPermissionIsNecessary: Boolean
-        get() = ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+        get() = ActivityCompat.shouldShowRequestPermissionRationale(
+            activity!!,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
 
     private val isPermissionToLocationAlreadyGranted: Boolean
-        get() = ActivityCompat.checkSelfPermission(context!!, Manifest.permission
-                .ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context!!, Manifest.permission
-                .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        get() = ActivityCompat.checkSelfPermission(
+            context!!, Manifest.permission
+                .ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context!!, Manifest.permission
+                .ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
     private val lastKnowLocation: Location?
         get() {
             var currentLocation: Location? = null
             try {
-                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient)
+                currentLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient)
             } catch (e: SecurityException) {
                 Log.e(TAG, " Permission to Location is not Granted")
             }
@@ -82,8 +89,10 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
 
         // Obtain the FirebaseAnalytics instance.
@@ -100,20 +109,20 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
 
     private fun handleGoogleAPI() {
         mGoogleApiClient = GoogleApiClient.Builder(context!!)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build()
+            .addApi(LocationServices.API)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .build()
         mGoogleApiClient!!.connect()
     }
 
     private fun createMap() {
         (activity!!.fragmentManager.findFragmentById(R.id.map) as MapFragment)
-                .getMapAsync { googleMap ->
-                    mMap = googleMap
-                    setMapStyle()
-                    initializeMap()
-                }
+            .getMapAsync { googleMap ->
+                mMap = googleMap
+                setMapStyle()
+                initializeMap()
+            }
     }
 
     private fun setMapStyle() {
@@ -217,7 +226,10 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
 
     protected fun stopLocationUpdates() {
         if (mGoogleApiClient!!.isConnected) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this@GardenMapFragment)
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient,
+                this@GardenMapFragment
+            )
             Log.d(TAG, "Location update stopped ..............: ")
         }
     }
@@ -295,8 +307,12 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
 
     private fun requestPermissionsWithoutExplanation() {
         this.requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-                MY_PERMISSIONS_REQUEST_LOCATION)
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ),
+            MY_PERMISSIONS_REQUEST_LOCATION
+        )
     }
 
 
@@ -338,15 +354,21 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
 
     private fun startLocationUpdates() {
         try {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                    mLocationRequest, this)
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient,
+                mLocationRequest, this
+            )
         } catch (e: SecurityException) {
             Log.e(TAG, " Permission to Location is not Granted")
         }
 
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         Log.d(TAG, "onRequestPermissionsResult")
         when (requestCode) {
 
@@ -422,7 +444,8 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
         }
     }
 
-    private inner class PlantRenderer internal constructor() : DefaultClusterRenderer<Plant>(context, mMap, mClusterManager) {
+    private inner class PlantRenderer internal constructor() :
+        DefaultClusterRenderer<Plant>(context, mMap, mClusterManager) {
 
         override fun onBeforeClusterItemRendered(plant: Plant?, markerOptions: MarkerOptions?) {
             val df = SimpleDateFormat.getDateInstance()
@@ -433,8 +456,8 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
                 gardener = plant.gardenerName
 
             markerOptions!!.title("" + plant.name!!)
-                    .snippet(gardener + " plantou " + plant.type + " em " + plantedDate)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.iplanted2))
+                .snippet(gardener + " plantou " + plant.type + " em " + plantedDate)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iplanted2))
         }
 
         override fun shouldRenderAsCluster(cluster: Cluster<Plant>): Boolean {
@@ -444,14 +467,14 @@ class GardenMapFragment : Fragment(), LocationListener, GoogleApiClient.Connecti
 
     companion object {
 
-        val PLANTS_DATASET = "plants"
-        val REQUEST_PLANT = 10
-        val LOCATION_TO_PLANT = "location_to_plant"
-        val MY_PERMISSIONS_REQUEST_LOCATION = 0
+        const val PLANTS_DATASET = "plants"
+        const val REQUEST_PLANT = 10
+        const val LOCATION_TO_PLANT = "location_to_plant"
+        const val MY_PERMISSIONS_REQUEST_LOCATION = 0
 
-        private val TAG = "Plants"
-        private val INTERVAL = (1000 * 60).toLong()
-        private val FASTEST_INTERVAL = (1000 * 10).toLong()
+        private const val TAG = "Plants"
+        private const val INTERVAL = (1000 * 60).toLong()
+        private const val FASTEST_INTERVAL = (1000 * 10).toLong()
 
         @JvmStatic
         fun newInstance() = GardenMapFragment()

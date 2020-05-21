@@ -2,8 +2,8 @@ package mobi.plantare
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ShareCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ShareCompat
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_plant_detail.*
 
 class PlantDetailActivity : AppCompatActivity() {
@@ -17,17 +17,17 @@ class PlantDetailActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             //TODO String to Share
             val stringToShare = StringBuilder()
-                    .append("Add")
-                    .append("\nPlant Details")
-                    .append("\nTo share")
+                .append("Add")
+                .append("\nPlant Details")
+                .append("\nTo share")
 
             startActivity(
-                    Intent.createChooser(
-                            ShareCompat.IntentBuilder.from(this)
-                                    .setType("text/plain")
-                                    .setText(stringToShare.toString())
-                                    .intent, getString(R.string.action_share)
-                    )
+                Intent.createChooser(
+                    ShareCompat.IntentBuilder.from(this)
+                        .setType("text/plain")
+                        .setText(stringToShare.toString())
+                        .intent, getString(R.string.action_share)
+                )
             )
         }
     }

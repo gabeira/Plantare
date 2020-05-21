@@ -2,13 +2,11 @@ package mobi.plantare.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -38,18 +36,22 @@ class LeaderBoardFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_leaderboard, container, false)
-        val recyclerView = view.findViewById<View>(R.id.list) as RecyclerView
+        val recyclerView =
+            view.findViewById<View>(R.id.list) as androidx.recyclerview.widget.RecyclerView
         mAdapter = LeaderBoardRecyclerViewAdapter(activity!!, topUsersList)
         recyclerView.adapter = mAdapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager =
+            androidx.recyclerview.widget.LinearLayoutManager(activity)
         return view
     }
 
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnListFragmentInteractionListener) {
             mListener = context
@@ -91,7 +93,7 @@ class LeaderBoardFragment : Fragment() {
             val lista = ArrayList<PlantareUser>()
 
             val myTopPostsQuery = myRef
-                    .orderByChild("numberPlantsDonated")
+                .orderByChild("numberPlantsDonated")
             myTopPostsQuery.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (!dataSnapshot.exists() || dataSnapshot.value == null) {
